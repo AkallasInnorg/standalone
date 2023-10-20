@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
+import MyCalendar from './components/calendar';
 // import Gantt from './components/gantt';
 
 
@@ -12,6 +13,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
       {/* <Gantt/> */}
+      <MyCalendar/>
       <GoogleGantt/>
       <NewGantt/> 
     </View>

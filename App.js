@@ -1,6 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
+import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
 // import Gantt from './components/gantt';
 
@@ -10,7 +11,7 @@ export default function App() {
       <Text>Open up App.js to start working on your app!</Text>
       {/* <Gantt/> */}
       <GoogleGantt/>
-      {/* <StatusBar style="auto" /> */}
+      <NewGantt/> 
     </View>
   );
 }

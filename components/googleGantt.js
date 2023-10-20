@@ -21,8 +21,8 @@ export default function GoogleGantt() {
         [
             "Research",
             "Find sources",
-            new Date(2015, 0, 1),
-            new Date(2015, 0, 5),
+            new Date(2023, 10, 1),
+            new Date(2023, 10, 5),
             null,
             100,
             null,
@@ -31,7 +31,7 @@ export default function GoogleGantt() {
             "Write",
             "Write paper",
             null,
-            new Date(2015, 0, 9),
+            new Date(2023, 10, 9),
             daysToMilliseconds(3),
             25,
             "Research,Outline",
@@ -40,7 +40,7 @@ export default function GoogleGantt() {
             "Cite",
             "Create bibliography",
             null,
-            new Date(2015, 0, 7),
+            new Date(2023, 10, 7),
             daysToMilliseconds(1),
             20,
             "Research",
@@ -49,7 +49,7 @@ export default function GoogleGantt() {
             "Complete",
             "Hand in paper",
             null,
-            new Date(2015, 0, 10),
+            new Date(2023, 10, 10),
             daysToMilliseconds(1),
             0,
             "Cite,Write",
@@ -58,22 +58,36 @@ export default function GoogleGantt() {
             "Outline",
             "Outline paper",
             null,
-            new Date(2015, 0, 6),
+            new Date(2023, 10, 6),
             daysToMilliseconds(1),
             100,
             "Research",
         ],
     ];
     const data = [columns, ...rows];
-
+    const options = {
+        is3D: true,
+        height: 500,
+        width:800,
+        gantt: {
+          trackHeight: 50,
+          criticalPathStyle: {
+            stroke: "#e64a19",
+            strokeWidth: 5,
+          },
+        },
+      };
 
     return (
     <View>
         <Chart
+            chartVersion="current"
+            // diffdata={}
             chartType="Gantt"
             width="100%"
             height="100%"
             data={data}
+            options={options}
         />
     </View>
     )

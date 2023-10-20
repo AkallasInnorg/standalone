@@ -5,6 +5,8 @@ import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
 // import Gantt from './components/gantt';
 
+
+//NEW YORK
 export default function App() {
   return (
     <View style={styles.container}>

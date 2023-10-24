@@ -4,7 +4,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
 import MyCalendar from './components/calendar';
-import PickerCalendar from './components/calendarPicker';
+import PapaerCalendar from './components/paperDates';
+// import { DragCalendar } from './components/daterangePicker';
+// import PickerCalendar from './components/calendarPicker';
+// import MyRangePicker from './components/calDatePicker';
+// import MyCalendario from './components/calendario';
+// import Picker from './components/daterangePicker';
 // import Gantt from './components/gantt';
 
 
@@ -16,7 +21,10 @@ export default function App() {
       {/* <Gantt/> */}
       <MyCalendar/>
       <hr/>
-      <PickerCalendar/>
+      {/* <DragCalendar/> Non funziona */}
+      <PapaerCalendar/>
+      <hr/>
+      {/* <MyRangePicker/> */}
       <hr/>
       <GoogleGantt/>
       <NewGantt/> 

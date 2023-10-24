@@ -81,10 +81,11 @@ export default function GoogleGantt() {
     return (
     <View>
         <Chart
+            // columns={}
             chartVersion="current"
             // diffdata={}
             chartType="Gantt"
-            width="100%"
+            // width="100%"
             height="100%"
             data={data}
             options={options}

@@ -5,6 +5,8 @@ import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
 import MyCalendar from './components/calendar';
 import PapaerCalendar from './components/paperDates';
+import TextCarousel from './components/textCarousel';
+import { Button } from 'react-native-elements';
 // import { DragCalendar } from './components/daterangePicker';
 // import PickerCalendar from './components/calendarPicker';
 // import MyRangePicker from './components/calDatePicker';
@@ -15,9 +17,12 @@ import PapaerCalendar from './components/paperDates';
 
 //NEW YORK
 export default function App() {
+  const prop = TextCarousel().props
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
+      <TextCarousel/>
+      <Button onPress={()=>console.log(prop)}/>
       {/* <Gantt/> */}
       <MyCalendar/>
       <hr/>
@@ -27,7 +32,7 @@ export default function App() {
       {/* <MyRangePicker/> */}
       <hr/>
       <GoogleGantt/>
-      <NewGantt/> 
+      {/* <NewGantt/>  */}
     </View>
   );
 }

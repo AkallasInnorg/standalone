@@ -1,12 +1,14 @@
+import React, {useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
 import NewGantt from './components/nikitaGantt';
 import GoogleGantt from './components/googleGantt';
 import MyCalendar from './components/calendar';
 import PapaerCalendar from './components/paperDates';
 import TextCarousel from './components/textCarousel';
-import { Button } from 'react-native-elements';
+import TextCarouselClass from './components/classTextCarousel';
 // import { DragCalendar } from './components/daterangePicker';
 // import PickerCalendar from './components/calendarPicker';
 // import MyRangePicker from './components/calDatePicker';
@@ -17,21 +19,55 @@ import { Button } from 'react-native-elements';
 
 //NEW YORK
 export default function App() {
-  const prop = TextCarousel().props
+  const periods = ['il tuo giorno', 'la tua settimana', 'il tuo mese'];
+  var [period, setPeriod] = useState(periods[0]);
+  var [count, setCount] = useState(0);
+
+  function changePeriodRight() {
+      if (count < 2) {
+          count++
+          setCount(count)
+          setPeriod(periods[count])
+          console.log(period)
+      } else {
+          count = 0;
+          setCount(count);
+          setPeriod(periods[count])
+          console.log(period)
+      }
+  }
+  function changePeriodLeft() {
+      if (count > 0) {
+          count--
+          setCount(count)
+          setPeriod(periods[count])
+          console.log(period)     
+      } else { 
+          count = 2 
+          setCount(count)
+          setPeriod(periods[count])
+          console.log(period)
+      }
+  }
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
-      <TextCarousel/>
-      <Button onPress={()=>console.log(prop)}/>
+      {/* <TextCarousel /> */}
+      <TextCarouselClass period={period} 
+      leftFunction={changePeriodLeft}
+      rightFunction={changePeriodRight}/>
+      <Text>{period === periods[1] ? `questa è ${period}` : `questo è ${period}` }</Text>
+      {/* <Details/> */}
+      <Button onPress={() => console.log(period)} />
       {/* <Gantt/> */}
-      <MyCalendar/>
-      <hr/>
+      <MyCalendar />
+      <hr />
       {/* <DragCalendar/> Non funziona */}
-      <PapaerCalendar/>
-      <hr/>
+      <PapaerCalendar />
+      <hr />
       {/* <MyRangePicker/> */}
-      <hr/>
-      <GoogleGantt/>
+      <hr />
+      <GoogleGantt />
       {/* <NewGantt/>  */}
     </View>
   );

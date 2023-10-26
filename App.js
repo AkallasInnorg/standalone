@@ -9,6 +9,7 @@ import MyCalendar from './components/calendar';
 import PapaerCalendar from './components/paperDates';
 import TextCarousel from './components/textCarousel';
 import TextCarouselClass from './components/classTextCarousel';
+import CustomHeader from './components/customHeaderPartial';
 // import { DragCalendar } from './components/daterangePicker';
 // import PickerCalendar from './components/calendarPicker';
 // import MyRangePicker from './components/calDatePicker';
@@ -59,6 +60,11 @@ export default function App() {
       <Text>{period === periods[1] ? `questa è ${period}` : `questo è ${period}` }</Text>
       {/* <Details/> */}
       <Button onPress={() => console.log(period)} />
+      <CustomHeader 
+      period={period}
+      leftFunction={changePeriodLeft}
+      rightFunction={changePeriodRight}
+      frase={period === periods[1] ? `questa è` : `questo è` } />
       {/* <Gantt/> */}
       <MyCalendar />
       <hr />

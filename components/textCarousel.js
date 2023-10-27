@@ -41,7 +41,7 @@ function TextCarousel () {
                 flexDirection: 'row', justifyContent: 'space-between',
                 alignItems: 'center', valueOf: {period: periods[count]}
             }}
-            containerStyle={{ borderRadius: 20, height: 50, width: 280}}>
+            containerStyle={{ borderRadius: 20, height: 50}}>
             <Ionicons name="chevron-back-outline" size={20} onPress={changePeriodLeft} />
             <Text style={{
                 fontSize: 20, verticalAlign: 'middle',

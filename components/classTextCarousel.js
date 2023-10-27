@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { View, Text } from "react-native";
+import React from "react";
+import { Text } from "react-native";
 import { Card } from "react-native-elements";
-import { Button } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function TextCarouselClass ({period, leftFunction, rightFunction}){
@@ -10,7 +9,7 @@ export default function TextCarouselClass ({period, leftFunction, rightFunction}
                 wrapperStyle={{
                     flexDirection: 'row', justifyContent: 'space-between',
                     alignItems: 'center'}}
-                containerStyle={{ borderRadius: 20, height: 57, width: 280 }}>
+                containerStyle={{ borderRadius: 20, height: 57, width: '120%' }}>
                 <Ionicons name="chevron-back-outline" size={20}
                     onPress={leftFunction}/>
                 <Text style={{

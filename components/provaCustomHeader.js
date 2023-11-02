@@ -35,7 +35,7 @@ export default function ProvaCustomHeader() {
         }
     }
     return (
-        <View style={{ flexDirection: 'row', zIndex: 4, width: '50%' }}>
+        <View key={periods[count]} style={{ flexDirection: 'row', zIndex: 4, width: '50%' }}>
             <Text style={{ fontSize: '200%', marginLeft: '2%', marginTop: '3%' }}>
                 Ciao </Text><Text style={{
                     color: '#E8A383', fontSize: '200%',

@@ -1,38 +1,58 @@
-import React, { Component } from 'react'
-import { View } from 'react-native'
-import GanttChart from 'C:/Users/akallas/Desktop/standalone/node_modules/react-native-gantt-chart/index.js'
+import { Chart } from "react-google-charts";
+import React from "react";
+import { Card } from "react-native-elements";
+import { View, useWindowDimensions, ScrollView } from "react-native";
 
 
-class Gantt extends Component {
-  constructor(props) {
-    super(props)
-    
-    this.state = {
-      tasks: [
-        { _id: "1", name: "Task 1", "start": new Date(2018, 0, 1), "end": new Date(2018, 0, 5), progress: 0.25 },
-        { _id: "2", name: "Task 2", "start": new Date(2018, 0, 3), "end": new Date(2018, 0, 4), progress: 1 },
-        { _id: "3", name: "Task 3", "start": new Date(2018, 0, 5), "end": new Date(2018, 0, 8), progress: 0.5 }
-        ]
+export default function MyGantt ({rows}){
+  const { height, width } = useWindowDimensions();
+
+    function daysToMilliseconds(days) {
+        return days * 24 * 60 * 60 * 1000;
     }
-  }
-  
-  render() {
-    return (
-        <GanttChart 
-          data={this.state.tasks}
-          numberOfTicks={6}
-          onPressTask={task => alert(task.name)}
-          gridMin={new Date(2023, 10, 21).getTime()}
-          gridMax={new Date(2023, 11, 21).getTime()}
-          colors={{
-            barColorPrimary: 'Grey',
-            barColorSecondary: '#4a69bd',
-            textColor: '#fff',
-            backgroundColor: 'black'
-          }}
-          />
-    )
-  }
-}
 
-export default Gantt
+    const columns = [
+        { type: "string", label: "Task ID" },
+        { type: "string", label: "Task Name" },
+        { type: "date", label: "Start Date" },
+        { type: "date", label: "End Date" },
+        { type: "number", label: "Duration" },
+        { type: "number", label: "Percent Complete" },
+        { type: "string", label: "Dependencies" }
+    ];
+
+    
+    const data = [columns, ...rows];
+    const options = {
+        is3D: false,
+        height: (height * 0.42),
+        width: (width * 0.9),
+        gantt: {
+            criticalPathEnabled: false,
+            innerGridHorizLine: {
+                stroke: "#ffe0b2",
+                strokeWidth: 2,
+            }
+        }
+    };
+
+    return (
+        <Card containerStyle={{
+            elevation: -1,
+            zIndex: 0,
+            width: '80%',
+            height: height * 0.6,
+            borderRadius: 10}}>
+            <View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                    <Chart
+                        chartVersion="current"
+                        chartType="Gantt"
+                        height="100%"
+                        data={data}
+                        options={options}/>
+                </ScrollView>
+            </View>
+        </Card>
+    )
+}

@@ -7,7 +7,8 @@ export default function CustomStyles(){
     const colors = useTheme().colors;
     return StyleSheet.create({
         prova: {
-            backgroundColor: colors.background
+            backgroundColor: colors.background,
+            flex: 1
         },
         provaText:{
             color: colors.text

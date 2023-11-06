@@ -10,72 +10,70 @@ import CustomHeader from './customHeaderPartial';
 import ProvaCustomHeader from './provaCustomHeader';
 import globalStyles from '../utils/globalStyles';
 import Gantt from './defGoogleGant';
+import DetailsCard from './detailCard';
+import MyGantt from './gantt';
 
 
 //NEW YORK
 export default function Home() {
-    const periods = ['il tuo giorno', 'la tua settimana', 'il tuo mese'];
-    var [period, setPeriod] = useState(periods[0]);
-    var [count, setCount] = useState(0);
-    const det = ProvaCustomHeader().key;
+    var row = [];
+    var rows = [
+        [
+            'description',
+            // "Find sources",
+            null,
+            new Date(2023, 10, 1),
+            new Date(2023, 10, 5),
+            null,
+            100,
+            null
+        ]]
 
-    function getData (){
+    function getData() {
+        var dets;
         axios.get('http://127.0.0.1:3000/get-data').
-        then(function (res){console.log(res)})
+            then(
+                function (res) {
+                    console.log(res.data);
+                    dets = res.data;
+                    for (var [key, value] of Object.entries(dets)) {
+                        row.push(value['ticket']);
+                        row.push(value['description']);
+                        row.push(new Date(value['dev_start']));
+                        row.push(new Date(value['planned_release']));
+                        row.push(null);
+                        row.push(100);
+                        row.push(null);
+                        rows.push(row);
+                        row = [];
+                    }
+                    console.log(rows);
+                }
+            );
     }
 
-    function changePeriodRight() {
-        if (count < 2) {
-            count++
-            setCount(count)
-            setPeriod(periods[count])
-            console.log(period)
-        } else {
-            count = 0;
-            setCount(count);
-            setPeriod(periods[count])
-            console.log(period)
-        }
-    }
-    function changePeriodLeft() {
-        if (count > 0) {
-            count--
-            setCount(count)
-            setPeriod(periods[count])
-            console.log(period)
-        } else {
-            count = 2
-            setCount(count)
-            setPeriod(periods[count])
-            console.log(period)
-        }
-    }
+
+
     return (
-        <ScrollView style={globalStyles().prova}>
-            <View style={styles.container}>
-                <Text
+        <View style={styles.container}>
+            <Text
                 style={globalStyles().provaText}
-                >Open up App.js to start working on your app!</Text>
-                {/* <Text>{period === periods[1] ? `questa è ${period}` : `questo è ${period}`}</Text>
-                <Button onPress={() => console.log(period)} />
-                <CustomHeader
-                    period={period}
-                    leftFunction={changePeriodLeft}
-                    rightFunction={changePeriodRight}
-                    frase={period === periods[1] ? `questa è` : `questo è`} /> */}
-                <Button onPress={() => console.log(det)} />
-                <hr />
+            >Open up App.js to start working on your app!</Text>
+            {/* <hr />
                 <Button onPress={getData}
-                >Get Data</Button>
-                <hr />
-                <ProvaCustomHeader />
-                <Gantt/>
-                <hr />
-                <MyCalendar />
-                <hr />
-                <PapaerCalendar />
-                {/* <GoogleGantt /> */}
-            </View></ScrollView>
+                ><Text>Get Data</Text></Button> */}
+            <hr />
+            <ProvaCustomHeader />
+            <hr />
+            <Button onPress={getData}
+            ><Text>Get Data</Text></Button>
+            <hr />
+            <DetailsCard />
+            {/* <hr />
+            <Gantt /> */}
+            <hr/>
+            <MyGantt rows={rows}/>
+        </View>
     );
 }
 

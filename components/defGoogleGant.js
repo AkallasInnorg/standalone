@@ -6,7 +6,7 @@ import { View, useWindowDimensions, ScrollView } from "react-native";
 
 export default function Gantt() {
     const { height, width } = useWindowDimensions();
-    
+
     function daysToMilliseconds(days) {
         return days * 24 * 60 * 60 * 1000;
     }
@@ -18,7 +18,7 @@ export default function Gantt() {
         { type: "date", label: "End Date" },
         { type: "number", label: "Duration" },
         { type: "number", label: "Percent Complete" },
-        { type: "string", label: "Dependencies" },
+        { type: "string", label: "Dependencies" }
     ];
 
     const rows = [
@@ -30,7 +30,7 @@ export default function Gantt() {
             new Date(2023, 10, 5),
             null,
             100,
-            null,
+            null
         ],
         [
             "Write",
@@ -87,32 +87,27 @@ export default function Gantt() {
             innerGridHorizLine: {
                 stroke: "#ffe0b2",
                 strokeWidth: 2,
-            },
-        },
+            }
+        }
     };
 
     return (
         <Card containerStyle={{
             elevation: -1,
             zIndex: 0,
-            width: '60%',
-            height: height * 0.4,
-            borderRadius: 10,
-        }}>
-            <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={true} 
-            contentContainerStyle={{height: height * 0.35}}>
+            width: '80%',
+            height: height * 0.6,
+            borderRadius: 10}}>
             <View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={true}>
-                <Chart
-                    chartVersion="current"
-                    chartType="Gantt"
-                    height="100%"
-                    data={data}
-                    options={options}
-                />
-            </ScrollView>
+                <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+                    <Chart
+                        chartVersion="current"
+                        chartType="Gantt"
+                        height="100%"
+                        data={data}
+                        options={options}/>
+                </ScrollView>
             </View>
-            </ScrollView>
         </Card>
     )
 }

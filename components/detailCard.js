@@ -2,7 +2,9 @@ import React from "react";
 import { Card } from "react-native-elements";
 import { View, Text } from "react-native";
 
-export default function DetailsCard() {
+export default function DetailsCard({details}) {
+        // const tempo_trascorso = (
+        //     details['planned_release']-details['dev_start'])
     return (
         <Card containerStyle={{
             flexDirection: 'column',
@@ -23,6 +25,7 @@ export default function DetailsCard() {
                     <Text>RESOURCES:      </Text>
                     <Text>CR:             </Text>
                 </View>
+                { !details ?  
                 <View style={{
                     flexDirection: 'column',
                     alignItems: 'center', flex: 1}}>
@@ -33,7 +36,18 @@ export default function DetailsCard() {
                     <Text>1234567</Text>
                     <Text>Davide Ferriero</Text>
                     <Text>D33K284637</Text>
-                </View>
+                </View> :  
+                <View style={{
+                    flexDirection: 'column',
+                    alignItems: 'center', flex: 1}}>
+                    <Text>{(details['planned_release']-details['dev_start'])}</Text>
+                    <Text>{(details['planned_release']-details['dev_start'])}</Text>
+                    <Text>{details['status']}</Text>
+                    <Text>{details['notes']}</Text>
+                    <Text>{details['ticket']}</Text>
+                    <Text>{details['text']}</Text> //momentaneo
+                    <Text>{details['commission']}</Text> //momentaneo
+                </View> }
             </View>
         </Card>
     )

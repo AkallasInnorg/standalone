@@ -1,9 +1,10 @@
 import { useTheme } from "@react-navigation/native";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useWindowDimensions } from "react-native";
 
 
 
 export default function CustomStyles(){
+    const {height, width} = useWindowDimensions();
     const colors = useTheme().colors;
     return StyleSheet.create({
         prova: {
@@ -12,7 +13,14 @@ export default function CustomStyles(){
         },
         provaText:{
             color: colors.text
-        }
+        },
+        containerHome: {
+            flex: 1,
+            backgroundColor: '#fff',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: height * 2
+        },
     })
 }
 

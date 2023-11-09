@@ -43,15 +43,30 @@ export default function MyCalendar () {
       enableSwipeMonths={true}
       onDayPress={day => {
         setSelected(day.dateString);
-        console.log(day.dateString)
+        console.log(day.dateString);
       }}
+      // markedDates={{
+      //   [selected]: {
+      //       marked: true,
+      //       selected: true, 
+      //       disableTouchEvent: true, 
+      //       selectedDotColor: 'orange',}
+      // }}
       markedDates={{
-        [selected]: {
-            marked: true,
-            selected: true, 
-            disableTouchEvent: true, 
-            selectedDotColor: 'orange',}
-      }}
+        '2023-11-15': {
+          periods: [
+            {startingDay: false, endingDay: true, color: '#5f9ea0'},
+            {startingDay: false, endingDay: true, color: '#ffa500'},
+            {startingDay: true, endingDay: false, color: '#f0e68c'}
+          ]
+        },
+        '2023-11-13': {
+          periods: [
+            {startingDay: true, endingDay: false, color: '#ffa500'},
+            {color: 'transparent'},
+            {startingDay: false, endingDay: false, color: '#f0e68c'}
+          ]
+        }}}
       markingType='multi-period'
       // markedDates={getMarked()}
     />

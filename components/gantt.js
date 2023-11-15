@@ -48,7 +48,7 @@ export default function MyGantt ({rows, evento}){
                 <ScrollView horizontal showsHorizontalScrollIndicator={true}>
                     <Chart
                         // chartVersion="current"
-                        chartVersion="51"
+                        chartVersion={51}
                         chartType="Gantt"
                         height="100%"
                         data={data}

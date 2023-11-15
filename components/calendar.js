@@ -1,32 +1,12 @@
 import React, {useState} from 'react';
+import { useWindowDimensions } from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function MyCalendar () {
   const [selected, setSelected] = useState('');
-
-  // const getMarked = () => {
-  //   let marked = {};
-  //   for(let i = 1; i <= 10; i++) {
-  //     let day = i.toString().padStart(2, '0');
-  //     let periods = [
-  //       {
-  //         startingDay: i == 1,
-  //         endingDay: i == 10,
-  //         color: 'teal',
-  //       },
-  //       (i >= 2 && i <= 6) && {
-  //         startingDay: i == 2,
-  //         endingDay: i == 6,
-  //         color: 'orange',
-  //       }
-  //     ];
-  //     marked[`2023-10-${day}`] = {
-  //       periods
-  //     };
-  //   }
-  //   return marked;
-  // };
+  const {height, width} = useWindowDimensions();
+  const dates = [];
 
   return (
     <Calendar
@@ -34,6 +14,8 @@ export default function MyCalendar () {
     headerStyle={{
     }}
       style={{
+        height: height / 2,
+        width: width / 2
         // backgroundColor: 'black',
         // borderBottomColor: 'black'
       }}
@@ -45,26 +27,23 @@ export default function MyCalendar () {
         setSelected(day.dateString);
         console.log(day.dateString);
       }}
-      // markedDates={{
-      //   [selected]: {
-      //       marked: true,
-      //       selected: true, 
-      //       disableTouchEvent: true, 
-      //       selectedDotColor: 'orange',}
-      // }}
       markedDates={{
         '2023-11-15': {
           periods: [
             {startingDay: false, endingDay: true, color: '#5f9ea0'},
-            {startingDay: false, endingDay: true, color: '#ffa500'},
-            {startingDay: true, endingDay: false, color: '#f0e68c'}
+            {startingDay: false, endingDay: true, color: '#f0e68c'}
+          ]
+        },
+        '2023-11-14': {
+          periods: [
+            {startingDay: false, endingDay: false, color: '#5f9ea0'},
+            {startingDay: false, endingDay: false, color: '#f0e68c'}
           ]
         },
         '2023-11-13': {
           periods: [
-            {startingDay: true, endingDay: false, color: '#ffa500'},
-            {color: 'transparent'},
-            {startingDay: false, endingDay: false, color: '#f0e68c'}
+            {startingDay: true, endingDay: false, color: '#5f9ea0'},
+            {startingDay: true, endingDay: false, color: '#f0e68c'}
           ]
         }}}
       markingType='multi-period'

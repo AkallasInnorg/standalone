@@ -16,10 +16,71 @@ import MyGantt from './gantt';
 
 //NEW YORK
 export default function Home() {
-    const {height, width} = useWindowDimensions();
     var row = [];
     var rows = [];
+    var dates = [];
+    var arrayOfDates = [];
     var dets, detailsData;
+
+    const generateColor = () => {
+        const randomColor = Math.floor(Math.random() * 16777215)
+            .toString(16)
+            .padStart(6, '0');
+        console.log(`#${randomColor}`);
+    };
+
+    function generateDates(startDate, endDate) {
+        const currentDate = new Date(startDate);
+        const lastDate = new Date(endDate);
+
+        if (currentDate > lastDate) {
+            throw new Error("Starting date cannot be after the ending date.");
+        }
+
+        while (currentDate <= lastDate) {
+            const dateString = currentDate.toISOString().split("T")[0];
+            dates.push(dateString);
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+        arrayOfDates.push(dates);
+        console.log(dates);
+        console.log(arrayOfDates);
+        // return dates;
+    }
+
+    function arrayOfDatesFIller(rows) {
+        arrayOfDates = []
+        for (row of rows) {
+            dates = []
+            generateDates(row[2], row[3])
+        }
+        return arrayOfDates;
+    }
+
+    function buildProperties(arrays, color) {
+        const properties = [];
+        for (let array of arrays)
+            for (let i = 0; i < array.length; i++) {
+                const startingDay = i === 0;
+                const endingDay = i === array.length - 1;
+
+                const property = {
+                    [array[i]]: {
+                        periods: [
+                            {
+                                startingDay: startingDay,
+                                endingDay: endingDay,
+                                color: color,
+                            },
+                        ],
+                    },
+                };
+
+                properties.push(property);
+            }
+        console.log(properties)
+        return properties;
+    }
 
     function getData() {
         axios.get('http://127.0.0.1:3000/get-data').
@@ -29,11 +90,17 @@ export default function Home() {
                     dets = res.data;
                     if (rows.length < 2) {
                         for (var [key, value] of Object.entries(dets)) {
+                            var start = new Date(value['dev_start']);
+                            var end = new Date(value['planned_release']);
+                            var dur = millscndToDays((end - start));
                             row.push(value['ticket']);
                             row.push(value['description']);
-                            row.push(new Date(value['dev_start']));
-                            row.push(new Date(value['planned_release']));
-                            row.push(null);
+                            // row.push(new Date(value['dev_start']));
+                            row.push(value['dev_start']);
+                            // row.push(new Date(value['planned_release']));
+                            row.push(value['planned_release']);
+                            // row.push(null);
+                            row.push(dur);
                             row.push(100);
                             row.push(null);
                             rows.push(row);
@@ -48,23 +115,22 @@ export default function Home() {
         return rows
     }
 
-    function detailsProvider (idx){
-        // if (!idx){detailsData = dets['0']}
+    function detailsProvider(idx) {
         detailsData = dets[idx]
         console.log(JSON.stringify(detailsData))
         console.log(detailsData)
     }
 
-    function millscndToDays(mlscd){
+    function millscndToDays(mlscd) {
         return mlscd / 1000 / 60 / 60 / 24;
     }
 
-    function quantoManca (){
+    function quantoManca() {
         // const start = new Date(8, 11, 2023);
         const start = new Date(2023, 11, 8);
         // const end = new Date(30, 11, 2023);
         const end = new Date(2023, 11, 30);
-        const range = end-start;
+        const range = end - start;
         const days = millscndToDays(range);
         console.log(range);
         console.log(days);
@@ -89,45 +155,41 @@ export default function Home() {
             }
         }]
 
+    function onLoad() {
+        getData();
+        arrayOfDatesFIller(rows);
+    }
 
-    useEffect(() => { getData(); });
-    // useEffect(() => { detailsProvider(); }, [detailsData])
+
+
+    // useEffect(() => { getData(); }, [rows]);
+    // useEffect(() => { arrayOfDatesFIller(rows);}, [arrayOfDates]);
+    useEffect(() => { onLoad() });
 
     return (
-        <ScrollView>
+        // <ScrollView>
         <View style={globalStyles().containerHome}>
-            {/* <Text
+            <Text
                 style={globalStyles().provaText}
-            >Open up App.js to start working on your app!</Text> */}
+            >Open up App.js to start working on your app!</Text>
             <ProvaCustomHeader />
             <hr />
             <Button onPress={getData}
             ><Text>Get Data</Text></Button>
-            <Button onPress={quantoManca}
+            <Button onPress={() => { arrayOfDatesFIller(rows); console.log(arrayOfDates[0]) }}
+            ></Button>
+            <Button onPress={() => buildProperties(arrayOfDates, 'plum')}
+            // {/* <Button onPress={() => console.log(arrayOfDates[0])} */}
             ></Button>
             <hr />
-            {/* { !detailsData ? <Text>No details available</Text> :  */}
-            <DetailsCard details={detailsData}/>
-            {/* // } */}
+            {/* <DetailsCard details={detailsData}/> */}
             <hr />
-            {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={getData()}
+            {/* {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={getData()} */}
+            {/* {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={rows}
                 evento={eventoClick}
-            />}
-            {/* <MyGantt rows={getData()}
-                evento={eventoClick}
-            /> */}
-            {/* <MyCalendar/> */}
-        </View> </ScrollView>
+            />} */}
+            <MyCalendar />
+        </View>
+        // </ScrollView>
     );
 }
-
-// const {height, width} = useWindowDimensions();
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1,
-//         backgroundColor: '#fff',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         height: height
-//     },
-// });

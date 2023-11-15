@@ -15,11 +15,11 @@ export default function CustomStyles(){
             color: colors.text
         },
         containerHome: {
-            flex: 1,
+            // flex: 1,
             backgroundColor: '#fff',
             alignItems: 'center',
             justifyContent: 'center',
-            height: height * 2
+            height: height
         },
     })
 }

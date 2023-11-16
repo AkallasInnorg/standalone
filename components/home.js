@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from 'react-native';
 import { Button } from 'react-native-elements';
 import axios from 'axios';
@@ -16,11 +16,43 @@ import MyGantt from './gantt';
 
 //NEW YORK
 export default function Home() {
+    const periods = ['il tuo giorno', 'la tua settimana', 'il tuo mese'];
+    var [period, setPeriod] = useState(periods[0]);
+    var [count, setCount] = useState(0);
     var row = [];
     var rows = [];
     var dates = [];
     var arrayOfDates = [];
+    var properties = [];
     var dets, detailsData;
+    var per = ProvaCustomHeader
+
+    function changePeriodRight() {
+        if (count < 2) {
+            count++
+            setCount(count)
+            setPeriod(periods[count])
+            console.log(period)
+        } else {
+            count = 0;
+            setCount(count);
+            setPeriod(periods[count])
+            console.log(period)
+        }
+    }
+    function changePeriodLeft() {
+        if (count > 0) {
+            count--
+            setCount(count)
+            setPeriod(periods[count])
+            console.log(period)
+        } else {
+            count = 2
+            setCount(count)
+            setPeriod(periods[count])
+            console.log(period)
+        }
+    }
 
     const generateColor = () => {
         const randomColor = Math.floor(Math.random() * 16777215)
@@ -45,20 +77,21 @@ export default function Home() {
         arrayOfDates.push(dates);
         console.log(dates);
         console.log(arrayOfDates);
-        // return dates;
+        return dates;
     }
 
-    function arrayOfDatesFIller(rows) {
-        arrayOfDates = []
-        for (row of rows) {
-            dates = []
-            generateDates(row[2], row[3])
-        }
-        return arrayOfDates;
+    function arrayOfDatesFIller() {
+        if (arrayOfDates < 1) {
+            for (let row of rows) {
+                dates = []
+                generateDates(row[2], row[3])
+            }
+            return arrayOfDates;
+        } else { arrayOfDates = [], arrayOfDatesFIller() }
     }
 
     function buildProperties(arrays, color) {
-        const properties = [];
+        properties = [];
         for (let array of arrays)
             for (let i = 0; i < array.length; i++) {
                 const startingDay = i === 0;
@@ -79,7 +112,20 @@ export default function Home() {
                 properties.push(property);
             }
         console.log(properties)
+        fill()
+        console.log(myList)
         return properties;
+    }
+
+    // var myList = Object.keys(properties).map(function(key){
+    //     return {label: key, value: properties[key]}
+    // });
+    var myList = [];
+    function fill() {
+        myList = []
+        Object.keys(properties).map(function (key) {
+            myList.push(properties[key])
+        });
     }
 
     function getData() {
@@ -108,11 +154,12 @@ export default function Home() {
                         }
                         console.log(rows);
                         console.log(dets);
+                        return rows;
                     } else { rows = []; getData() }
 
                 }
-            );
-        return rows
+            ).then(() => { arrayOfDatesFIller() });
+        // return rows
     }
 
     function detailsProvider(idx) {
@@ -123,17 +170,6 @@ export default function Home() {
 
     function millscndToDays(mlscd) {
         return mlscd / 1000 / 60 / 60 / 24;
-    }
-
-    function quantoManca() {
-        // const start = new Date(8, 11, 2023);
-        const start = new Date(2023, 11, 8);
-        // const end = new Date(30, 11, 2023);
-        const end = new Date(2023, 11, 30);
-        const range = end - start;
-        const days = millscndToDays(range);
-        console.log(range);
-        console.log(days);
     }
 
 
@@ -155,16 +191,8 @@ export default function Home() {
             }
         }]
 
-    function onLoad() {
-        getData();
-        arrayOfDatesFIller(rows);
-    }
 
-
-
-    // useEffect(() => { getData(); }, [rows]);
-    // useEffect(() => { arrayOfDatesFIller(rows);}, [arrayOfDates]);
-    useEffect(() => { onLoad() });
+    useEffect(() => { getData(); }, [rows]);
 
     return (
         // <ScrollView>
@@ -172,14 +200,17 @@ export default function Home() {
             <Text
                 style={globalStyles().provaText}
             >Open up App.js to start working on your app!</Text>
-            <ProvaCustomHeader />
+            <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
             <hr />
-            <Button onPress={getData}
+            {/* <Button onPress={getData} */}
+            <Button onPress={()=>console.log(per)}
             ><Text>Get Data</Text></Button>
-            <Button onPress={() => { arrayOfDatesFIller(rows); console.log(arrayOfDates[0]) }}
-            ></Button>
-            <Button onPress={() => buildProperties(arrayOfDates, 'plum')}
+            {/* <Button onPress={() => { arrayOfDatesFIller(); console.log(arrayOfDates) }}
+            ></Button> */}
+            <Button
+                onPress={() => buildProperties(arrayOfDates, 'plum')}
             // {/* <Button onPress={() => console.log(arrayOfDates[0])} */}
+            // onPress={() => console.log(myList)}
             ></Button>
             <hr />
             {/* <DetailsCard details={detailsData}/> */}
@@ -188,7 +219,7 @@ export default function Home() {
             {/* {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={rows}
                 evento={eventoClick}
             />} */}
-            <MyCalendar />
+            {period == periods[2] ? <MyCalendar markedDates={{arrayOfDates}} /> : <Text>Other stuff</Text>}
         </View>
         // </ScrollView>
     );

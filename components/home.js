@@ -12,6 +12,7 @@ import globalStyles from '../utils/globalStyles';
 import Gantt from './defGoogleGant';
 import DetailsCard from './detailCard';
 import MyGantt from './gantt';
+import TimeSheet from './timeSheet';
 
 
 //NEW YORK
@@ -32,12 +33,12 @@ export default function Home() {
             count++
             setCount(count)
             setPeriod(periods[count])
-            console.log(period)
+            // console.log(period)
         } else {
             count = 0;
             setCount(count);
             setPeriod(periods[count])
-            console.log(period)
+            // console.log(period)
         }
     }
     function changePeriodLeft() {
@@ -45,12 +46,12 @@ export default function Home() {
             count--
             setCount(count)
             setPeriod(periods[count])
-            console.log(period)
+            // console.log(period)
         } else {
             count = 2
             setCount(count)
             setPeriod(periods[count])
-            console.log(period)
+            // console.log(period)
         }
     }
 
@@ -97,8 +98,9 @@ export default function Home() {
                 const startingDay = i === 0;
                 const endingDay = i === array.length - 1;
 
-                const property = {
-                    [array[i]]: {
+                // const property = {
+                    // [array[i]]: {
+                    properties[array[i]]= {
                         periods: [
                             {
                                 startingDay: startingDay,
@@ -106,27 +108,27 @@ export default function Home() {
                                 color: color,
                             },
                         ],
-                    },
-                };
-
-                properties.push(property);
+                    };
+                // };
+                // console.log()
+                // properties.push(property);
             }
         console.log(properties)
-        fill()
-        console.log(myList)
+        // fill()
+        // console.log(myList)
         return properties;
     }
 
     // var myList = Object.keys(properties).map(function(key){
     //     return {label: key, value: properties[key]}
     // });
-    var myList = [];
-    function fill() {
-        myList = []
-        Object.keys(properties).map(function (key) {
-            myList.push(properties[key])
-        });
-    }
+    // var myList = [];
+    // function fill() {
+    //     myList = []
+    //     Object.keys(properties).map(function (key) {
+    //         myList.push(properties[key])
+    //     });
+    // }
 
     function getData() {
         axios.get('http://127.0.0.1:3000/get-data').
@@ -202,24 +204,14 @@ export default function Home() {
             >Open up App.js to start working on your app!</Text>
             <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
             <hr />
-            {/* <Button onPress={getData} */}
             <Button onPress={()=>console.log(per)}
             ><Text>Get Data</Text></Button>
-            {/* <Button onPress={() => { arrayOfDatesFIller(); console.log(arrayOfDates) }}
-            ></Button> */}
             <Button
                 onPress={() => buildProperties(arrayOfDates, 'plum')}
-            // {/* <Button onPress={() => console.log(arrayOfDates[0])} */}
-            // onPress={() => console.log(myList)}
             ></Button>
-            <hr />
-            {/* <DetailsCard details={detailsData}/> */}
-            <hr />
-            {/* {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={getData()} */}
-            {/* {!rows ? <Text>No Gantt available</Text> : <MyGantt rows={rows}
-                evento={eventoClick}
-            />} */}
-            {period == periods[2] ? <MyCalendar markedDates={{arrayOfDates}} /> : <Text>Other stuff</Text>}
+            
+            {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
+            <TimeSheet/>
         </View>
         // </ScrollView>
     );

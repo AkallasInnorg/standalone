@@ -21,6 +21,18 @@ export default function CustomStyles(){
             justifyContent: 'center',
             height: height
         },
+        container: {
+            flex: 1,
+            justifyContent: 'center',
+            backgroundColor: 'plum',
+            width: width / 1.5,
+            borderRadius: 10
+        },
+        imageThumbnail: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: height / 3,
+        },
     })
 }
 

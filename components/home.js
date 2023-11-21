@@ -13,6 +13,7 @@ import Gantt from './defGoogleGant';
 import DetailsCard from './detailCard';
 import MyGantt from './gantt';
 import TimeSheet from './timeSheet';
+import OtherTimeSHeet from './otherTimesheet';
 
 
 //NEW YORK
@@ -197,22 +198,25 @@ export default function Home() {
     useEffect(() => { getData(); }, [rows]);
 
     return (
-        // <ScrollView>
+        <ScrollView>
         <View style={globalStyles().containerHome}>
-            <Text
+            {/* <Text
                 style={globalStyles().provaText}
-            >Open up App.js to start working on your app!</Text>
-            <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
+            >Open up App.js to start working on your app!</Text> */}
+            {/* <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
             <hr />
             <Button onPress={()=>console.log(per)}
             ><Text>Get Data</Text></Button>
             <Button
                 onPress={() => buildProperties(arrayOfDates, 'plum')}
-            ></Button>
+            ></Button> */}
             
             {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
-            <TimeSheet/>
+            {/* <TimeSheet/> */}
+            <hr/>
+            <OtherTimeSHeet/>
+            <hr/>
         </View>
-        // </ScrollView>
+        </ScrollView>
     );
 }

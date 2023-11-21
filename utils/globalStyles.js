@@ -15,7 +15,6 @@ export default function CustomStyles(){
             color: colors.text
         },
         containerHome: {
-            // flex: 1,
             backgroundColor: '#fff',
             alignItems: 'center',
             justifyContent: 'center',
@@ -35,9 +34,3 @@ export default function CustomStyles(){
         },
     })
 }
-
-// export default StyleSheet.create({
-    // prova: {
-    //     backgroundColor: colors.background
-    // }
-// })

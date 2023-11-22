@@ -1,6 +1,9 @@
 import * as React from 'react';
 import * as RN from 'react-native';
+import { StyleSheet, Button, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Dialog } from 'react-native-paper';
+
 
 
 class OtherTimeSHeet extends React.Component {
@@ -30,6 +33,13 @@ class OtherTimeSHeet extends React.Component {
         });
     }
 
+    toggleVisibility = () => {
+        this.setState(() => {
+            this.state.visible = !this.state.visible
+            return this.state;
+        })
+    }
+
     weekDays = [
         "Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"
     ];
@@ -37,7 +47,8 @@ class OtherTimeSHeet extends React.Component {
     nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     state = {
-        activeDate: new Date()
+        activeDate: new Date(),
+        visible: false
     }
 
     generateMatrix() {
@@ -100,121 +111,142 @@ class OtherTimeSHeet extends React.Component {
         return matrix;
     }
 
-
     render() {
         var matrix = this.generateMatrix();
-
         var rows = [];
         rows = matrix.map((row, rowIndex) => {
             var rowItems = row.map((item, colIndex) => {
                 if (colIndex != 5 && colIndex != 6)
                     return (rowIndex == 0 ?
                         //render week days, sort of header
-                        <RN.View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                height: '0%',
-                                width: '20%',
-                                borderRadius: 10,
-                            }}>
-                            <RN.Text
-                                style={{
-                                    flex: 1,
-                                    textAlign: 'center',
-                                    backgroundColor: 'transparent',
-                                    color: colIndex == 6 ? '#a00' : '#000',
-                                    fontWeight: 'bold'
-                                }}
-                                onPress={() => this._onPress(item)}>
-                                {item != -1 ? item : ''}
+                        <RN.View style={styles.daysView}>
+                            <RN.Text style={[styles.daysText]}>
+                                {item}
                             </RN.Text>
                         </RN.View>
                         :
                         //render calendar days
-                        <RN.View
-                            style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                margin: 0,
-                                height: '130%',
-                                width: '20%',
-                                borderRadius: 10,
-                            }}>
-                            <RN.Text
-                                style={{
-                                    flex: 1,
-                                    textAlign: 'center',
-                                    // Highlight header
-                                    backgroundColor: 'transparent',
-                                    // Highlight Sundays
-                                    color: colIndex == 6 ? '#a00' : '#000',
-                                    // Highlight current date
-                                    fontWeight: item == this.state.activeDate.getDate()
-                                        ? 'bold' : ' '
-                                }}
-                            //DA SOSTITUIRE CON METODO PER INSERIRE I TASKS    
-                            // onPress={() => this._onPress(item)}
-                            >
-                                {item != -1 ? item : ''}
+                        <RN.View style={styles.calView}>
+                            <RN.Text style={[styles.calText,
+                            {
+                                fontWeight: (
+                                    rowIndex == 5 && item < 10
+                                    || rowIndex == 6 && item < 10
+                                    || rowIndex == 1 && item > 10)
+                                    ? '200' : ' '
+                            }
+                            ]}
+                                onPress={() => this.toggleVisibility()}
+                            >{item}
                             </RN.Text>
+                            {/* VIEW CONTENENTE IL TASK, VERRà RENDERIZZATO SOLO SE IL TASK ESISTE */}
+                            {/* <RN.View style={{alignSelf: 'center', backgroundColor: 'black', 
+                            height: '10%', marginBottom: '80%', width: '80%'}}></RN.View> */}
                         </RN.View>
                     );
             });
 
             return (
                 <RN.View
-                    style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'space-around',
-                        alignItems: 'center',
-                    }}>
+                    style={styles.rowItems}>
                     {rowItems}
                 </RN.View>
             );
         });
 
         return (
-            <RN.SafeAreaView style={{
-                flex: 1,
-                justifyContent: 'center',
-                backgroundColor: 'plum',
-                width: '80%',
-                borderRadius: 10
-            }}>
+            <RN.SafeAreaView style={styles.safeArea}>
                 <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <RN.View style={{
-                        height: '5%',
-                        alignSelf: 'flex-start',
-                        marginLeft: '5%',
-                        marginTop: '3%'
-                    }}>
-                        <RN.Text style={{
-                            fontWeight: 'bold',
-                            fontSize: 28,
-                            textAlign: 'center'
-                        }}>
+                    <RN.View style={styles.header}>
+                        <RN.Text style={styles.monthText}>
                             {this.months[this.state.activeDate.getMonth()]} &nbsp;
                             {this.state.activeDate.getFullYear()}
                         </RN.Text>
                     </RN.View>
-                    <RN.View style={{
-                        columnGap: '70%',
-                        flexDirection: 'row',
-                        height: '5%',
-                        marginRight: '10%',
-                        marginTop: '3%'
-                    }}>
-                        <Ionicons name='chevron-back-outline' color={'black'} size={40} onPress={() => this.changeMonth(-1)}/>
-                        <Ionicons name='chevron-forward-outline' color={'black'} size={40} onPress={() => this.changeMonth(+1)}/>
+                    <RN.View style={styles.arrows}>
+                        <Ionicons name='chevron-back-outline' color={'black'} size={40}
+                            onPress={() => this.changeMonth(-1)} />
+                        <Ionicons name='chevron-forward-outline' color={'black'} size={40}
+                            onPress={() => this.changeMonth(+1)} />
                     </RN.View>
                 </RN.View>
                 {rows}
+                <Dialog visible={this.state.visible}
+                    onDismiss={() => this.toggleVisibility()}>
+                    <Dialog.Title>Alert</Dialog.Title>
+                    <Dialog.Content>
+                        <Text>This is simple dialog {}</Text>
+                    </Dialog.Content>
+                    <Dialog.Actions>
+                        <Button
+                            onPress={() => this.toggleVisibility()}
+                        >Done</Button>
+                    </Dialog.Actions>
+                </Dialog>
             </RN.SafeAreaView>
         );
     }
 }
 
-// Export for now to get rid of error and see preview:
 export default OtherTimeSHeet
+
+
+const styles = StyleSheet.create({
+    daysText: {
+        flex: 1,
+        textAlign: 'center',
+        backgroundColor: 'transparent',
+        fontWeight: 'bold'
+    },
+    daysView: {
+        flex: 1,
+        flexDirection: 'column',
+        width: '20%',
+        borderRadius: 10,
+    },
+    calView: {
+        flex: 1,
+        flexDirection: 'column',
+        margin: 0,
+        height: '130%',
+        width: '20%',
+        borderRadius: 10,
+    },
+    calText: {
+        flex: 1,
+        textAlign: 'center',
+        backgroundColor: 'transparent',
+    },
+    rowItems: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+    },
+    safeArea: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'plum',
+        width: '80%',
+        borderRadius: 10
+    },
+    header: {
+        height: '5%',
+        alignSelf: 'flex-start',
+        marginLeft: '5%',
+        marginTop: '3%'
+    },
+    monthText: {
+        fontWeight: 'bold',
+        fontSize: 28,
+        textAlign: 'center'
+    },
+    arrows: {
+        columnGap: '70%',
+        flexDirection: 'row',
+        height: '5%',
+        marginRight: '10%',
+        marginTop: '3%'
+    }
+
+})

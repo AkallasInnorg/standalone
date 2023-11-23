@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as RN from 'react-native';
 import { StyleSheet, Button, Text } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Dialog } from 'react-native-paper';
+import { Dialog, TextInput, Title } from 'react-native-paper';
 
 
 
@@ -12,17 +12,23 @@ class OtherTimeSHeet extends React.Component {
         "Novembre", "Dicembre"
     ];
 
+    weekDays = [
+        "Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"
+    ];
 
-    //METODO CHE EVIDENZIA IL GIORNO SELEZIONATO SETTANDO IL FONTWEIGHT = BOLD
-    //AL MOMENTO INUTILE, DA SOSTITUIRE CON POP-UP PER AGGIUNGERE I TASKS
-    // _onPress = (item) => {
-    //     this.setState(() => {
-    //         if (!item.match && item != -1) {
-    //             this.state.activeDate.setDate(item);
-    //             return this.state;
-    //         }
-    //     });
-    // };
+    nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    selection = new Map()
+
+    selDays = []
+
+    state = {
+        activeDate: new Date(),
+        visible: false,
+        text: '',
+        daySelected: null,
+        monthSelected: null
+    }
 
     changeMonth = (n) => {
         this.setState(() => {
@@ -33,22 +39,45 @@ class OtherTimeSHeet extends React.Component {
         });
     }
 
-    toggleVisibility = () => {
+    toggleVisibility = (item, month) => {
         this.setState(() => {
             this.state.visible = !this.state.visible
+            if (item) {
+                this.state.daySelected = item
+                this.state.monthSelected = month
+                console.log(this.state.daySelected);
+                console.log(this.state.monthSelected);
+                console.log(typeof (item));
+                console.log(typeof (month))
+            }
             return this.state;
         })
     }
 
-    weekDays = [
-        "Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"
-    ];
+    confirmTask = () => {
+        if (this.selection.has(this.state.monthSelected)) {
+            if (typeof (this.selection.get(this.state.monthSelected)) == 'object') {
+                this.selDays.push(this.state.daySelected)
+                this.selection.set(this.state.monthSelected, this.selDays)
+            }
+            else {
+                this.selDays.push(this.selection.get(this.state.monthSelected))
+                this.selDays.push(this.state.daySelected)
+                this.selection.set(this.state.monthSelected, this.selDays)
+            }
+        } else {
+            this.selection.set(this.state.monthSelected, this.state.daySelected)
+        }
+        console.log(this.selection)
+        console.log(this.selection.get(this.state.monthSelected))
+        this.toggleVisibility()
+    }
 
-    nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-    state = {
-        activeDate: new Date(),
-        visible: false
+    saveText = (inputText) => {
+        this.setState(() => {
+            this.state.text = inputText
+        })
+        console.log(this.state.text)
     }
 
     generateMatrix() {
@@ -82,7 +111,7 @@ class OtherTimeSHeet extends React.Component {
                 }
             }
         }
-        //FILL THE DAYS OF THE PREVIOUS MONTH
+        //FILL DAYS OF THE PREVIOUS MONTH
         var firstCount = matrix[1].filter(el => el == -1).length
         var idx = 0;
         for (var el of matrix[1]) {
@@ -94,7 +123,7 @@ class OtherTimeSHeet extends React.Component {
             firstCount--
             idx++
         }
-        //FILL THE DAYS OF THE NEXT MONTH
+        //FILL DAYS OF THE NEXT MONTH
         var count = 1
         matrix = matrix.filter(row => row[0] !== -1)
         for (var i = 5; i < matrix.length; i++) {
@@ -136,12 +165,29 @@ class OtherTimeSHeet extends React.Component {
                                     ? '200' : ' '
                             }
                             ]}
-                                onPress={() => this.toggleVisibility()}
+                                onPress={() => this.toggleVisibility(item, this.months[this.state.activeDate.getMonth()])}
                             >{item}
                             </RN.Text>
                             {/* VIEW CONTENENTE IL TASK, VERRà RENDERIZZATO SOLO SE IL TASK ESISTE */}
-                            {/* <RN.View style={{alignSelf: 'center', backgroundColor: 'black', 
-                            height: '10%', marginBottom: '80%', width: '80%'}}></RN.View> */}
+
+                            {
+                                this.selection.has(this.months[this.state.activeDate.getMonth()])
+                                    &&
+                                    this.selection.get(this.months[this.state.activeDate.getMonth()]) == Number(item)
+                                    ||
+                                    this.selection.has(this.months[this.state.activeDate.getMonth()])
+                                    &&
+                                    // this.selection.get(this.months[this.state.activeDate.getMonth()]).map(
+                                    //     (day => day == Number(item))
+                                    // )
+                                    this.selection.get(this.months[this.state.activeDate.getMonth()]).includes(Number(item))
+                                    ?
+                                    <RN.View style={{
+                                        alignSelf: 'center', backgroundColor: 'black',
+                                        height: '10%', marginBottom: '80%', width: '80%'
+                                    }}></RN.View>
+                                    : <></>}
+
                         </RN.View>
                     );
             });
@@ -172,15 +218,16 @@ class OtherTimeSHeet extends React.Component {
                 </RN.View>
                 {rows}
                 <Dialog visible={this.state.visible}
-                    onDismiss={() => this.toggleVisibility()}>
-                    <Dialog.Title>Alert</Dialog.Title>
-                    <Dialog.Content>
-                        <Text>This is simple dialog {}</Text>
+                    onDismiss={() => this.toggleVisibility()}
+                    style={{ width: '50%', alignSelf: 'center' }}>
+                    <Dialog.Title>Add Task</Dialog.Title>
+                    <Dialog.Content style={{ flexDirection: 'row' }}>
+                        {/* <Text>Title</Text> */}
+                        <TextInput label={'Title'} onChangeText={text => this.saveText(text)} />
                     </Dialog.Content>
                     <Dialog.Actions>
-                        <Button
-                            onPress={() => this.toggleVisibility()}
-                        >Done</Button>
+                        {/* <Button title='Conferma' onPress={() => this.toggleVisibility()} /> */}
+                        <Button title='Conferma' onPress={() => this.confirmTask()} />
                     </Dialog.Actions>
                 </Dialog>
             </RN.SafeAreaView>

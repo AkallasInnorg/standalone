@@ -70,6 +70,7 @@ class OtherTimeSHeet extends React.Component {
         }
         console.log(this.selection)
         console.log(this.selection.get(this.state.monthSelected))
+        console.log(this.selection.get(this.months[this.state.activeDate.getMonth()]))
         this.toggleVisibility()
     }
 
@@ -178,9 +179,9 @@ class OtherTimeSHeet extends React.Component {
                                     this.selection.has(this.months[this.state.activeDate.getMonth()])
                                     &&
                                     // this.selection.get(this.months[this.state.activeDate.getMonth()]).map(
-                                    //     (day => day == Number(item))
+                                    //     (value => value == Number(item))
                                     // )
-                                    this.selection.get(this.months[this.state.activeDate.getMonth()]).includes(Number(item))
+                                    Array.from(this.selection.get(this.months[this.state.activeDate.getMonth()])).includes(Number(item))
                                     ?
                                     <RN.View style={{
                                         alignSelf: 'center', backgroundColor: 'black',

@@ -81,6 +81,7 @@ class OtherTimeSHeet extends React.Component {
         console.log(this.state.text)
     }
 
+
     generateMatrix() {
         var matrix = [];
         // Create header
@@ -149,14 +150,14 @@ class OtherTimeSHeet extends React.Component {
                 if (colIndex != 5 && colIndex != 6)
                     return (rowIndex == 0 ?
                         //render week days, sort of header
-                        <RN.View style={styles.daysView}>
-                            <RN.Text style={[styles.daysText]}>
+                        <RN.View key={item} style={styles.daysView}>
+                            <RN.Text key={item} style={[styles.daysText]}>
                                 {item}
                             </RN.Text>
                         </RN.View>
                         :
                         //render calendar days
-                        <RN.View style={styles.calView}>
+                        <RN.View key={item} style={styles.calView}>
                             <RN.Text style={[styles.calText,
                             {
                                 fontWeight: (
@@ -178,15 +179,12 @@ class OtherTimeSHeet extends React.Component {
                                     ||
                                     this.selection.has(this.months[this.state.activeDate.getMonth()])
                                     &&
-                                    // this.selection.get(this.months[this.state.activeDate.getMonth()]).map(
-                                    //     (value => value == Number(item))
-                                    // )
                                     Array.from(this.selection.get(this.months[this.state.activeDate.getMonth()])).includes(Number(item))
                                     ?
-                                    <RN.View style={{
-                                        alignSelf: 'center', backgroundColor: 'black',
+                                    <RN.View key={item} style={{
+                                        alignSelf: 'center', backgroundColor: 'white',
                                         height: '10%', marginBottom: '80%', width: '80%'
-                                    }}></RN.View>
+                                    }}><Text>{this.state.text}</Text></RN.View>
                                     : <></>}
 
                         </RN.View>
@@ -194,7 +192,7 @@ class OtherTimeSHeet extends React.Component {
             });
 
             return (
-                <RN.View
+                <RN.View key={row}
                     style={styles.rowItems}>
                     {rowItems}
                 </RN.View>

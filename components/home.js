@@ -14,6 +14,7 @@ import DetailsCard from './detailCard';
 import MyGantt from './gantt';
 import TimeSheet from './timeSheet';
 import OtherTimeSHeet from './otherTimesheet';
+import MyAgenda from './agenda';
 
 
 //NEW YORK
@@ -214,7 +215,9 @@ export default function Home() {
             {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
             {/* <TimeSheet/> */}
             <hr/>
-            <OtherTimeSHeet/>
+            <MyAgenda/>
+            {/* <OtherTimeSHeet/> */}
+            {/* <MyCalendar/> */}
             <hr/>
         </View>
         </ScrollView>

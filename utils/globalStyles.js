@@ -38,6 +38,18 @@ export default function CustomStyles() {
             backgroundColor: 'transparent',
             // color: colIndex == 6 ? '#a00' : '#000',
             fontWeight: 'bold'
+        },
+        containerAgenda: {
+            flex: 1,
+            width: width / 2,
+            height: height / 3
+        },
+        itemAgenda: {
+            flex: 1,
+            borderRadius: 5,
+            padding: 10,
+            marginRight: 10,
+            marginTop: 17
         }
     })
 }

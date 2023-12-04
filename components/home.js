@@ -15,6 +15,7 @@ import MyGantt from './gantt';
 import TimeSheet from './timeSheet';
 import OtherTimeSHeet from './otherTimesheet';
 import MyAgenda from './agenda';
+import WeekTimeSHeet from './weekTimeSheet';
 
 
 //NEW YORK
@@ -101,16 +102,16 @@ export default function Home() {
                 const endingDay = i === array.length - 1;
 
                 // const property = {
-                    // [array[i]]: {
-                    properties[array[i]]= {
-                        periods: [
-                            {
-                                startingDay: startingDay,
-                                endingDay: endingDay,
-                                color: color,
-                            },
-                        ],
-                    };
+                // [array[i]]: {
+                properties[array[i]] = {
+                    periods: [
+                        {
+                            startingDay: startingDay,
+                            endingDay: endingDay,
+                            color: color,
+                        },
+                    ],
+                };
                 // };
                 // console.log()
                 // properties.push(property);
@@ -133,7 +134,7 @@ export default function Home() {
     // }
 
     function getData() {
-        axios.get('http://127.0.0.1:3000/get-data').
+        axios.get('http://127.0.0.1:3000/task/all').
             then(
                 function (res) {
                     // console.log(res.data);
@@ -195,31 +196,47 @@ export default function Home() {
             }
         }]
 
+    function getCurrentWeekNumber() {
+        const now = new Date();
+        const startOfYear = new Date(now.getFullYear(), 0, 1);
+        const startOfWeek = new Date(
+            startOfYear.setDate(startOfYear.getDate() - startOfYear.getDay())
+        );
+
+        const diffInTime = now.getTime() - startOfWeek.getTime();
+        const diffInWeeks = Math.floor(diffInTime / (1000 * 3600 * 24 * 7));
+
+        console.log(diffInWeeks + 1)
+        return diffInWeeks + 1; // Add 1 to account for the first week
+    }
+
 
     useEffect(() => { getData(); }, [rows]);
 
     return (
         <ScrollView>
-        <View style={globalStyles().containerHome}>
-            {/* <Text
+            <View style={globalStyles().containerHome}>
+                {/* <Text
                 style={globalStyles().provaText}
             >Open up App.js to start working on your app!</Text> */}
-            {/* <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
+                {/* <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
             <hr />
             <Button onPress={()=>console.log(per)}
             ><Text>Get Data</Text></Button>
             <Button
                 onPress={() => buildProperties(arrayOfDates, 'plum')}
             ></Button> */}
-            
-            {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
-            {/* <TimeSheet/> */}
-            <hr/>
-            <MyAgenda/>
-            {/* <OtherTimeSHeet/> */}
-            {/* <MyCalendar/> */}
-            <hr/>
-        </View>
+
+                {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
+                {/* <TimeSheet/> */}
+                <hr />
+                {/* <MyAgenda/> */}
+                {/* <Button onPress={() => getCurrentWeekNumber()} /> */}
+                {/* <OtherTimeSHeet/> */}
+                <WeekTimeSHeet />
+                {/* <MyCalendar/> */}
+                <hr />
+            </View>
         </ScrollView>
     );
 }

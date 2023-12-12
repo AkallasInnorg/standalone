@@ -16,6 +16,8 @@ import TimeSheet from './timeSheet';
 import OtherTimeSHeet from './otherTimesheet';
 import MyAgenda from './agenda';
 import WeekTimeSHeet from './weekTimeSheet';
+import TabViewExample from './tabView';
+import WeekTimeSHeetFunc from './week_func_timesheet';
 
 
 //NEW YORK
@@ -28,7 +30,8 @@ export default function Home() {
     var dates = [];
     var arrayOfDates = [];
     var properties = [];
-    var dets, detailsData;
+    var dets = []; 
+    var detailsData;
     var per = ProvaCustomHeader
 
     function changePeriodRight() {
@@ -159,7 +162,7 @@ export default function Home() {
                         }
                         console.log(rows);
                         console.log(dets);
-                        return rows;
+                        return rows, dets;
                     } else { rows = []; getData() }
 
                 }
@@ -233,7 +236,10 @@ export default function Home() {
                 {/* <MyAgenda/> */}
                 {/* <Button onPress={() => getCurrentWeekNumber()} /> */}
                 {/* <OtherTimeSHeet/> */}
-                <WeekTimeSHeet />
+                {/* <WeekTimeSHeet /> */}
+                <WeekTimeSHeetFunc items={dets}/>
+                <hr/>
+                {/* <TabViewExample/> */}
                 {/* <MyCalendar/> */}
                 <hr />
             </View>

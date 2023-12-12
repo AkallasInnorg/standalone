@@ -3,27 +3,28 @@ import * as RN from 'react-native';
 import { StyleSheet, Button, Text, View } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Dialog, TextInput, Card } from 'react-native-paper';
+import axios from 'axios';
 // import { Card } from 'react-native-elements';
 
 
 
-class WeekTimeSHeet extends React.Component{
-    months = ["Gennaio", "Febbraio", "Marzo", "Aprile",
+export default function WeekTimeSHeetFunc ({items}){
+    const months = ["Gennaio", "Febbraio", "Marzo", "Aprile",
         "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre",
         "Novembre", "Dicembre"
     ];
 
-    weekDays = [
+    const weekDays = [
         "Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"
     ];
 
-    nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    selection = new Map()
+    var selection = new Map()
 
-    selDays = []
+    var selDays = []
 
-    state = {
+    var state = {
         activeDate: new Date(),
         visible: false,
         text: '',
@@ -32,52 +33,28 @@ class WeekTimeSHeet extends React.Component{
         weekNun: 1
     }
 
-    rows = []
+    var dets = []
 
-    getData = () => {
+    function getData () {
         axios.get('http://127.0.0.1:3000/task/all').
             then(
                 function (res) {
-                    // console.log(res.data);
                     dets = res.data;
-                    if (rows.length < 2) {
-                        for (var [key, value] of Object.entries(dets)) {
-                            var start = new Date(value['dev_start']);
-                            var end = new Date(value['planned_release']);
-                            var dur = millscndToDays((end - start));
-                            row.push(value['ticket']);
-                            row.push(value['description']);
-                            // row.push(new Date(value['dev_start']));
-                            row.push(value['dev_start']);
-                            // row.push(new Date(value['planned_release']));
-                            row.push(value['planned_release']);
-                            // row.push(null);
-                            row.push(dur);
-                            row.push(100);
-                            row.push(null);
-                            rows.push(row);
-                            row = [];
-                        }
-                        console.log(rows);
-                        console.log(dets);
-                        return rows;
-                    } else { rows = []; getData() }
+                    console.log(dets)})}
 
-                }
-            ).then(() => { arrayOfDatesFIller() });
-        // return rows
-    }
-
-    changeMonth = (n) => {
-        this.setState(() => {
-            this.state.activeDate.setMonth(
-                this.state.activeDate.getMonth() + n
+    function changeMonth (n) {
+        // this.setState(() => {
+            state.activeDate.setMonth(
+               state.activeDate.getMonth() + n
             )
-            return this.state;
-        });
+        //     return this.state;
+        // });
+        // state.activeDate.getMonth() + n
+        console.log(state.activeDate.getMonth() + 1)
+        return state.activeDate
     }
 
-    toggleVisibility = (item, month) => {
+    function toggleVisibility  (item, month)  {
         this.setState(() => {
             this.state.visible = !this.state.visible
             if (item) {
@@ -92,7 +69,7 @@ class WeekTimeSHeet extends React.Component{
         })
     }
 
-    confirmTask = () => {
+    function confirmTask () {
         if (this.selection.has(this.state.monthSelected)) {
             if (typeof (this.selection.get(this.state.monthSelected)) == 'object') {
                 this.selDays.push(this.state.daySelected)
@@ -112,14 +89,14 @@ class WeekTimeSHeet extends React.Component{
         this.toggleVisibility()
     }
 
-    saveText = (inputText) => {
+    function saveText  (inputText) {
         this.setState(() => {
             this.state.text = inputText
         })
         console.log(this.state.text)
     }
 
-    getCurrentWeekNumber = () => {
+    function getCurrentWeekNumber  () {
         const now = new Date();
         const startOfYear = new Date(now.getFullYear(), 0, 1);
         const startOfWeek = new Date(
@@ -129,29 +106,32 @@ class WeekTimeSHeet extends React.Component{
         const diffInTime = now.getTime() - startOfWeek.getTime();
         const diffInWeeks = Math.floor(diffInTime / (1000 * 3600 * 24 * 7));
 
-        this.setState(() => { this.state.weekNun = diffInWeeks + 1 })
-        this.state.weekNun = diffInWeeks + 1
+        // setState(() => { state.weekNun = diffInWeeks + 1 })
+        state.weekNun = diffInWeeks + 1
         console.log(diffInWeeks + 1)
-        console.log(this.state.weekNun)
-        return this.state.weekNun;
+        console.log(state.weekNun)
+        return state.weekNun;
     }
 
+    useEffect(()=>{getData()}, [dets])
+    // console.log(dets)
 
-    render() {
+    function renderRows() {
         var rows = [];
-        rows = this.weekDays.map((val, idx) => {
+        rows = weekDays.map((val, idx) => {
             return (
                 <RN.View key={idx + 1} style={{ flexDirection: 'column', height: '96.7%', width: '14.28%' }}>
-                    <Text key={idx + 2} style={{ alignSelf: 'center', bottom: '1%' }}>{this.weekDays[idx]}</Text>
+                    <Text key={idx + 2} style={{ alignSelf: 'center', bottom: '1%' }}>{weekDays[idx]}</Text>
                     <Card key={idx} style={{ backgroundColor: 'trans', height: '100%', width: '100%', flexDirection: 'column' }}>
                         <View key={idx} style={{
                             alignSelf: 'center', backgroundColor: 'white',
                             height: '10%', marginBottom: '80%', width: '100%', borderRadius: 20
-                        }}><Text>{this.state.text}</Text></View>
+                        }}><Text>{state.text}</Text></View>
+                        {/* IL TASK DEVE CORRISPONDERE PER NUMERO DI SETTIMANA, PER GIORNO DELLA SETTIMANA  E PER ANNO*/}
                     </Card>
                 </RN.View>
             )
-        })
+        }); return rows;}
         return (
             <RN.View style={{ flex: 1, flexDirection: 'row', height: '100%', width: '80%' }}>
                 <RN.SafeAreaView style={styles.safeArea}>
@@ -159,39 +139,37 @@ class WeekTimeSHeet extends React.Component{
                         <RN.View style={styles.header}>
                             <RN.Text style={styles.monthText}>
                                 {/* {this.months[this.state.activeDate.getMonth()]} &nbsp; */}
-                                {this.state.activeDate.getFullYear()} &nbsp;
-                                Settimana N° {this.getCurrentWeekNumber()}
+                                {state.activeDate.getFullYear()} &nbsp;
+                                Settimana N° {getCurrentWeekNumber()}
                             </RN.Text>
                         </RN.View>
                         <RN.View style={styles.arrows}>
                             <Ionicons name='chevron-back-outline' color={'black'} size={40}
-                                onPress={() => this.changeMonth(-1)} />
+                                onPress={() => changeMonth(-1)} />
                             <Ionicons name='chevron-forward-outline' color={'black'} size={40}
-                                onPress={() => this.changeMonth(+1)} />
+                                onPress={() => {changeMonth(+1); console.log(dets)}} />
                         </RN.View>
                     </RN.View>
                     <RN.View style={{ flexDirection: 'row', flex: 1 }}>
-                        {rows}
+                        {renderRows()}
                     </RN.View>
-                    <Dialog visible={this.state.visible}
-                        onDismiss={() => this.toggleVisibility()}
+                    <Dialog visible={state.visible}
+                        onDismiss={() => toggleVisibility()}
                         style={{ width: '50%', alignSelf: 'center' }}>
                         <Dialog.Title>Add Task</Dialog.Title>
                         <Dialog.Content style={{ flexDirection: 'row' }}>
                             {/* <Text>Title</Text> */}
-                            <TextInput label={'Title'} onChangeText={text => this.saveText(text)} />
+                            <TextInput label={'Title'} onChangeText={text => saveText(text)} />
                         </Dialog.Content>
                         <Dialog.Actions>
                             {/* <Button title='Conferma' onPress={() => this.toggleVisibility()} /> */}
-                            <Button title='Conferma' onPress={() => this.confirmTask()} />
+                            <Button title='Conferma' onPress={() => confirmTask()} />
                         </Dialog.Actions>
                     </Dialog>
                 </RN.SafeAreaView></RN.View>
         );
-    }
+    // }
 }
-
-export default WeekTimeSHeet
 
 
 const styles = StyleSheet.create({

@@ -7,6 +7,14 @@ export default function CustomStyles() {
     const { height, width } = useWindowDimensions();
     const colors = useTheme().colors;
     return StyleSheet.create({
+        myCalStyle: {
+            height: height * 0.46,
+            width: width * 0.33,
+            borderRadius: 20,
+            marginRight: '4px',
+            marginTop: '7px',
+            marginLeft: '11px'
+        },
         prova: {
             backgroundColor: colors.background,
             flex: 1

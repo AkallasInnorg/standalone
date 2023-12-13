@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
 
-export default function GanttTask({ item, index, lines, start, end }) {
+export default function GanttTask({ item, index, lines, start, end, method, method2, method3 }) {
+    
 
-    console.log("Index ", index);
+    // console.log("Index ", index);
 
     const onPress = (index) => {
         console.log("pressed");
@@ -16,8 +17,8 @@ export default function GanttTask({ item, index, lines, start, end }) {
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(0, 0, 0, 0);
 
-    console.log(startDate);
-    console.log(endDate);
+    // console.log(startDate);
+    // console.log(endDate);
 
     // const numberOfDays = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
     // console.log(numberOfDays);
@@ -26,7 +27,7 @@ export default function GanttTask({ item, index, lines, start, end }) {
         const now = new Date();
         const currentDayOfWeek = ((now.getDay() - 1) + 7) % 7; // 0 is Sunday, 1 is Monday, ..., 6 is Saturday
 
-        console.log(currentDayOfWeek);
+        // console.log(currentDayOfWeek);
 
         // Set the time to midnight to get the start of the day
         const firstDayOfWeek = new Date(now);
@@ -37,12 +38,12 @@ export default function GanttTask({ item, index, lines, start, end }) {
     }
 
     const firstDayOfWeek = getFirstDayOfTheWeek();
-    console.log(firstDayOfWeek)
+    // console.log(firstDayOfWeek)
 
     const firstDayOfMonth = new Date();
     firstDayOfMonth.setDate(1);
     firstDayOfMonth.setHours(0, 0, 0, 0);
-    console.log(firstDayOfMonth);
+    // console.log(firstDayOfMonth);
 
     //calcolo giorno iniziale; se non rientra nella settimana/mese in corso imposto a -1
     const getFirstDayIndex = (startDate, firstDayOfWeek, firstDayOfMonth) => {
@@ -63,7 +64,7 @@ export default function GanttTask({ item, index, lines, start, end }) {
     }
 
     const firstDayIndex = getFirstDayIndex(startDate, firstDayOfWeek, firstDayOfMonth);
-    console.log(firstDayIndex);
+    // console.log(firstDayIndex);
 
     const getNumberOfDays = (firstDayOfWeek, startDate, endDate) => {
         var numberOfDays = 0;
@@ -85,9 +86,11 @@ export default function GanttTask({ item, index, lines, start, end }) {
     }
 
     const numberOfDays = getNumberOfDays(firstDayOfWeek, startDate, endDate);
-    console.log(numberOfDays);
+    // console.log(numberOfDays);
 
-    console.log(lines);
+    // console.log(lines);
+
+    
 
     return (
         // <View style={[styles.taskParent, {
@@ -98,17 +101,26 @@ export default function GanttTask({ item, index, lines, start, end }) {
         // // { marginTop: lines === 5 ? 8 : 15 }
         // ]}>
             /* <TouchableOpacity style={[styles.taskContainer, */
-            <Pressable style={[styles.taskContainer,
+            <Pressable 
+            key={item.ID} 
+            style={[styles.taskContainer,
             {
                 width: `${numberOfDays < 0 ? 0 : (numberOfDays) * (1 / lines) * 100 + 0.05 * numberOfDays}%`,
                 left: `${firstDayIndex === 0 ? 0 : (firstDayIndex - 1) * (1 / lines) * 100 + 0.05 * firstDayIndex}%`,
                 // height: lines === 5 ? 75 : 40,
                 // marginTop: lines === 5 ? '7%' : '3%',
             }]}
-                onPress={() => alert(index)}>
+                // onPress={() =>alert(index)}
+                onPress={method2}
+                onPressIn={method}
+                // onPress={setGlobal()}
+                >
                 <Text style={[styles.taskTitle, {
                     display: numberOfDays < 0 ? 'none' : 'flex'
-                }]} onPress={() => { alert(index); }}>{item.ID} - {item.Title}</Text>
+                }]}
+                //  onPress={() => { method }}
+                // onPress={method}
+                >{item.ID} - {item.Title}</Text>
             {/* </TouchableOpacity> */}
             </Pressable>
         /* </View> */

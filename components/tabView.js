@@ -22,7 +22,7 @@ const ThirdRoute = () => (
     </View>
 );
 
-export default function TabViewExample({}) {
+export default function TabViewExample() {
     const layout = useWindowDimensions();
 
     const [index, setIndex] = React.useState(0);
@@ -41,7 +41,7 @@ export default function TabViewExample({}) {
     const renderScenex = ()=>{
         switch(routes[index].key){
             case 'first':
-                return <MonthGantt />;
+                return <MonthGantt/>;
             case 'second':
                 return SecondRoute;
             case 'third':

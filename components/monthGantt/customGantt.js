@@ -6,7 +6,7 @@ import axios from 'axios';
 import GanttTask from './ganttTask';
 import GanttBackground from './ganttBackground';
 
-export default function MonthGantt() {
+export default function MonthGantt({method, method2}) {
     const [checked, setChecked] = useState(false);
     const [lines, setLines] = useState(5);
     const [height, setHeight] = useState('55%');
@@ -60,7 +60,7 @@ export default function MonthGantt() {
     }
 
     const daysOfCurrentMonth = getDaysInMonth();
-    console.log(daysOfCurrentMonth);
+    // console.log(daysOfCurrentMonth);
 
     const toggleSwitch = () => {
         setChecked(previousState => !previousState);
@@ -75,7 +75,7 @@ export default function MonthGantt() {
 
     const currentDate = new Date();
     const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
-    console.log(firstDay);
+    // console.log(firstDay);
 
     const mapDaysToLabel = (day, daysOfCurrentMonth) => {
         const daysMap = {
@@ -99,7 +99,7 @@ export default function MonthGantt() {
     }
 
     const monthArray = mapDaysToLabel(firstDay, daysOfCurrentMonth);
-    console.log(monthArray);
+    // console.log(monthArray);
 
     function widthNeeded() {
         var len = 50
@@ -109,18 +109,26 @@ export default function MonthGantt() {
                 count = i - 9
             }
         }
-        console.log(count)
+        // console.log(count)
         len = len + (count * 2)
-        console.log(len)
+        // console.log(len)
         var strLen = `${len}%`
         setHeight(strLen)
-        console.log(height)
+        // console.log(height)
     }
 
     useEffect(() => {
         setLines(daysOfCurrentMonth);
         widthNeeded();
     }, [])
+
+
+    global.taskId = ''
+
+    const setGlobal = (id)=>{
+        taskId = id
+        console.log(taskId)
+    }
 
     return (
         <Card containerStyle={[styles.ganttCard]} wrapperStyle={styles.ganttCardContent}>
@@ -129,15 +137,60 @@ export default function MonthGantt() {
             </View>
             <GanttBackground lines={lines} />
             {items.map((item, index) => (
-                <GanttTask key={item.ID} item={item} index={index} lines={lines} start={item.StartDate} end={item.EndDate} />
+                <GanttTask key={item.ID} item={item} index={index} lines={lines} start={item.StartDate} end={item.EndDate} 
+                method={()=>{setGlobal(item.ID)}} method2={method2}
+                // method={()=>console.log(item)}
+                />
             ))}
         </Card>
     );
 }
 
 const styles = StyleSheet.create({
+    // ganttCard: {
+    //     height: '100%',
+    //     borderBottomLeftRadius: 15,
+    //     borderBottomRightRadius: 15,
+    //     overflow: 'hidden',
+    //     flexDirection: 'column',
+    //     margin: '0px'
+    // },
+    // ganttCardContent: {
+    //     height: '100%',
+    // },
+    // label: {
+    //     top: 20,
+    //     bottom: 15,
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     width: '89%',
+    //     left: '3%'
+    // },
+    // labelText: {
+    //     marginLeft: '6%'
+    // },
+    // monthLabel: {
+    //     marginBottom: '3%',
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     width: '100%',
+    //     left: '0.4%'
+    // },
+    // monthText: {
+    //     marginLeft: '0.5%',
+    // },
+    // container: {
+    //     flex: 1,
+    // },
+    // TestText: {
+    //     fontSize: 45,
+    // },
+    // taskTitle: {
+    //     color: 'white',
+    // },
     ganttCard: {
-        height: '100%',
+        height: '50%',
+        width: '70%',
         borderBottomLeftRadius: 15,
         borderBottomRightRadius: 15,
         overflow: 'hidden',
@@ -146,17 +199,6 @@ const styles = StyleSheet.create({
     },
     ganttCardContent: {
         height: '100%',
-    },
-    label: {
-        top: 20,
-        bottom: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '89%',
-        left: '3%'
-    },
-    labelText: {
-        marginLeft: '6%'
     },
     monthLabel: {
         marginBottom: '3%',
@@ -167,14 +209,5 @@ const styles = StyleSheet.create({
     },
     monthText: {
         marginLeft: '0.5%',
-    },
-    container: {
-        flex: 1,
-    },
-    TestText: {
-        fontSize: 45,
-    },
-    taskTitle: {
-        color: 'white',
     },
 });

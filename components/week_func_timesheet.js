@@ -40,16 +40,13 @@ export default function WeekTimeSHeetFunc ({items}){
             then(
                 function (res) {
                     dets = res.data;
-                    console.log(dets)})}
+                    console.log(dets)})
+                }
 
     function changeMonth (n) {
-        // this.setState(() => {
             state.activeDate.setMonth(
                state.activeDate.getMonth() + n
             )
-        //     return this.state;
-        // });
-        // state.activeDate.getMonth() + n
         console.log(state.activeDate.getMonth() + 1)
         return state.activeDate
     }

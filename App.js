@@ -8,7 +8,10 @@ import Home from './components/home';
 const Stack = createNativeStackNavigator();
 export const ThemeContext = React.createContext();
 
+
+
 export default function App() {
+  global.taskId = ''
   const [theme, setTheme] = useState('Dark');
   const themeData = { theme, setTheme };
   return (

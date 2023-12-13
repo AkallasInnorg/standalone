@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 import axios from 'axios';
 
 import GoogleGantt from './googleGantt';
@@ -18,6 +18,7 @@ import MyAgenda from './agenda';
 import WeekTimeSHeet from './weekTimeSheet';
 import TabViewExample from './tabView';
 import WeekTimeSHeetFunc from './week_func_timesheet';
+import MonthGantt from './monthGantt/customGantt';
 
 
 //NEW YORK
@@ -25,6 +26,7 @@ export default function Home() {
     const periods = ['il tuo giorno', 'la tua settimana', 'il tuo mese'];
     var [period, setPeriod] = useState(periods[0]);
     var [count, setCount] = useState(0);
+    var [id, setId] = useState('');
     var row = [];
     var rows = [];
     var dates = [];
@@ -82,8 +84,8 @@ export default function Home() {
             currentDate.setDate(currentDate.getDate() + 1);
         }
         arrayOfDates.push(dates);
-        console.log(dates);
-        console.log(arrayOfDates);
+        // console.log(dates);
+        // console.log(arrayOfDates);
         return dates;
     }
 
@@ -160,8 +162,8 @@ export default function Home() {
                             rows.push(row);
                             row = [];
                         }
-                        console.log(rows);
-                        console.log(dets);
+                        // console.log(rows);
+                        // console.log(dets);
                         return rows, dets;
                     } else { rows = []; getData() }
 
@@ -213,34 +215,37 @@ export default function Home() {
         return diffInWeeks + 1; // Add 1 to account for the first week
     }
 
+    var tab = MonthGantt(_).props.children[2]
 
     useEffect(() => { getData(); }, [rows]);
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+    const renderText = ()=>{
+        console.log('renderizzare')
+        setId(global.taskId)
+        forceUpdate()
+    }
+
+    
+
+    
 
     return (
         <ScrollView>
             <View style={globalStyles().containerHome}>
-                {/* <Text
-                style={globalStyles().provaText}
-            >Open up App.js to start working on your app!</Text> */}
-                {/* <ProvaCustomHeader leftMethod={changePeriodLeft} rightMethod={changePeriodRight} period={period}/>
-            <hr />
-            <Button onPress={()=>console.log(per)}
-            ><Text>Get Data</Text></Button>
-            <Button
-                onPress={() => buildProperties(arrayOfDates, 'plum')}
-            ></Button> */}
-
-                {/* {period == periods[2] ? <MyCalendar markedDates={{properties}} /> : <Text>Other stuff</Text>} */}
-                {/* <TimeSheet/> */}
-                <hr />
-                {/* <MyAgenda/> */}
-                {/* <Button onPress={() => getCurrentWeekNumber()} /> */}
-                {/* <OtherTimeSHeet/> */}
-                {/* <WeekTimeSHeet /> */}
-                <WeekTimeSHeetFunc items={dets}/>
+                <Button
+                onPress={() => console.log(global.taskId)}
+                ></Button>
                 <hr/>
-                {/* <TabViewExample/> */}
-                {/* <MyCalendar/> */}
+                <Card  
+                containerStyle={{borderRadius: 20, height: '40%', width: '70%', backgroundColor: 'plum'}}>
+                    {/* {renderDetails(id)} */}
+                    {(id == '') ? <></> : 
+                    <Text>{id}</Text> }
+                </Card>
+                <hr/>
+                <MonthGantt method2={()=>renderText()}
+                // method={()=>console.log()}
+                />
                 <hr />
             </View>
         </ScrollView>

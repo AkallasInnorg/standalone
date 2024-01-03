@@ -5,8 +5,9 @@ import axios from 'axios';
 
 import GanttTask from './ganttTask';
 import GanttBackground from './ganttBackground';
+import TaskManager from '../task_manager';
 
-export default function MonthGantt({method, method2}) {
+export default function MonthGantt({ method, method2 }) {
     const [checked, setChecked] = useState(false);
     const [lines, setLines] = useState(5);
     const [height, setHeight] = useState('55%');
@@ -19,8 +20,8 @@ export default function MonthGantt({method, method2}) {
         { ID: '4', Title: 'Item 4', StartDate: '2023-12-15', EndDate: '2023-12-29' },
         { ID: '5', Title: 'Item 5', StartDate: '2023-12-02', EndDate: '2023-12-31' },
         { ID: '6', Title: 'Item 6', StartDate: '2023-12-28', EndDate: '2024-01-11' },
-        { ID: '7', Title: 'Item 7', StartDate: '2023-11-28', EndDate: '2023-11-29' },
-        { ID: '8', Title: 'Item 8', StartDate: '2023-11-15', EndDate: '2023-11-29' },
+        // { ID: '7', Title: 'Item 7', StartDate: '2023-11-28', EndDate: '2023-11-29' },
+        // { ID: '8', Title: 'Item 8', StartDate: '2023-11-15', EndDate: '2023-11-29' },
         // { ID: '8', Title: 'Item 8', StartDate: '2023-11-15', EndDate: '2023-11-29' },
         // { ID: '8', Title: 'Item 8', StartDate: '2023-11-15', EndDate: '2023-11-29' },
         // Add more items as needed
@@ -125,7 +126,7 @@ export default function MonthGantt({method, method2}) {
 
     global.taskId = ''
 
-    const setGlobal = (id)=>{
+    const setGlobal = (id) => {
         taskId = id
         console.log(taskId)
     }
@@ -137,11 +138,12 @@ export default function MonthGantt({method, method2}) {
             </View>
             <GanttBackground lines={lines} />
             {items.map((item, index) => (
-                <GanttTask key={item.ID} item={item} index={index} lines={lines} start={item.StartDate} end={item.EndDate} 
-                method={()=>{setGlobal(item.ID)}} method2={method2}
+                <GanttTask key={item.ID} item={item} index={index} lines={lines} start={item.StartDate} end={item.EndDate}
+                    method={() => { setGlobal(item.ID) }} method2={method2}
                 // method={()=>console.log(item)}
                 />
             ))}
+                <TaskManager />
         </Card>
     );
 }
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 15,
         overflow: 'hidden',
         flexDirection: 'column',
-        margin: '0px'
+        margin: '0px',
     },
     ganttCardContent: {
         height: '100%',

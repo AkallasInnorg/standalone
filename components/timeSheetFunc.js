@@ -7,7 +7,8 @@ import { ListItem } from 'react-native-elements';
 import axios from 'axios';
 
 
-class TimeSheet extends React.Component {
+// class TimeSheet extends React.Component {
+export default function TimeSheetFunc (){
     // constructor() {
     //     super();
     //     this.state = {items: []};
@@ -15,22 +16,22 @@ class TimeSheet extends React.Component {
 
 
 
-    months = ["Gennaio", "Febbraio", "Marzo", "Aprile",
+    var months = ["Gennaio", "Febbraio", "Marzo", "Aprile",
         "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre",
         "Novembre", "Dicembre"
     ];
 
-    weekDays = [
+    var weekDays = [
         "Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"
     ];
 
-    nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var nDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
-    selection = new Map()
+    var selection = new Map()
 
-    selDays = []
+    var selDays = []
 
-    state = {
+    var state = {
         activeDate: new Date(),
         visible: false,
         text: '',
@@ -39,80 +40,80 @@ class TimeSheet extends React.Component {
         items: []
     }
 
-    getData = () => {
+    const getData = () => {
         var items;
         axios.get('http://127.0.0.1:3000/task/all').
             then(
                 function (res) {
                     items = res.data
                 })
-        this.state.items = items
+        state.items = items
         return items
     }
 
 
-    changeMonth = (n) => {
-        this.setState(() => {
-            this.state.activeDate.setMonth(
-                this.state.activeDate.getMonth() + n
+    const changeMonth = (n) => {
+        setState(() => {
+            state.activeDate.setMonth(
+                state.activeDate.getMonth() + n
             )
-            return this.state;
+            return state;
         });
     }
 
-    toggleVisibility = (item, month) => {
-        this.setState(() => {
-            this.state.visible = !this.state.visible
+    const toggleVisibility = (item, month) => {
+        setState(() => {
+            state.visible = !state.visible
             if (item) {
-                this.state.daySelected = item
-                this.state.monthSelected = month
-                console.log(this.state.daySelected);
-                console.log(this.state.monthSelected);
+                state.daySelected = item
+                state.monthSelected = month
+                console.log(state.daySelected);
+                console.log(state.monthSelected);
                 console.log(typeof (item));
                 console.log(typeof (month))
             }
-            return this.state;
+            return state;
         })
     }
 
-    confirmTask = () => {
-        if (this.selection.has(this.state.monthSelected)) {
-            if (typeof (this.selection.get(this.state.monthSelected)) == 'object') {
-                this.selDays.push(this.state.daySelected)
-                this.selection.set(this.state.monthSelected, this.selDays)
+    const confirmTask = () => {
+        if (selection.has(state.monthSelected)) {
+            if (typeof (selection.get(state.monthSelected)) == 'object') {
+                selDays.push(state.daySelected)
+                selection.set(state.monthSelected, selDays)
             }
             else {
-                this.selDays.push(this.selection.get(this.state.monthSelected))
-                this.selDays.push(this.state.daySelected)
-                this.selection.set(this.state.monthSelected, this.selDays)
+                selDays.push(selection.get(state.monthSelected))
+                selDays.push(state.daySelected)
+                selection.set(state.monthSelected, selDays)
             }
         } else {
-            this.selection.set(this.state.monthSelected, this.state.daySelected)
+            selection.set(state.monthSelected, state.daySelected)
         }
-        console.log(this.selection)
-        console.log(this.selection.get(this.state.monthSelected))
-        console.log(this.selection.get(this.months[this.state.activeDate.getMonth()]))
-        this.toggleVisibility()
+        console.log(selection)
+        console.log(selection.get(state.monthSelected))
+        console.log(selection.get(months[state.activeDate.getMonth()]))
+        toggleVisibility()
     }
 
-    saveText = (inputText) => {
-        this.setState(() => {
-            this.state.text = inputText
+    const saveText = (inputText) => {
+        setState(() => {
+            state.text = inputText
         })
-        console.log(this.state.text)
+        console.log(state.text)
     }
 
 
-    generateMatrix() {
+    const generateMatrix = () => {
         var matrix = [];
         // Create header
-        matrix[0] = this.weekDays;
+        matrix[0] = weekDays;
 
-        var year = this.state.activeDate.getFullYear();
-        var month = this.state.activeDate.getMonth();
+        var year = state.activeDate.getFullYear();
+        var month = state.activeDate.getMonth();
         var firstDay = new Date(year, month, 0).getDay();
         var prevMonth = month - 1;
-        var maxDays = this.nDays[month];
+        var maxDays = nDays[month];
         if (month == 1) { // February
             if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) {
                 maxDays += 1;
@@ -139,7 +140,7 @@ class TimeSheet extends React.Component {
         var idx = 0;
         for (var el of matrix[1]) {
             if (el == -1) {
-                el = this.nDays[prevMonth] - (firstCount - 1)
+                el = nDays[prevMonth] - (firstCount - 1)
                 console.log(el)
                 matrix[1][idx] = el
             }
@@ -164,9 +165,9 @@ class TimeSheet extends React.Component {
     }
 
 
-    render() {
-        var items = this.getData()
-        var matrix = this.generateMatrix();
+    function render() {
+        var items = getData()
+        var matrix = generateMatrix();
         var rows = [];
         rows = matrix.map((row, rowIndex) => {
             var rowItems = row.map((item, colIndex) => {
@@ -189,17 +190,17 @@ class TimeSheet extends React.Component {
                                     ? '200' : '500'
                             }
                             ]}
-                                onPress={() => this.toggleVisibility(item, this.months[this.state.activeDate.getMonth()])}
+                                onPress={() => toggleVisibility(item, months[state.activeDate.getMonth()])}
                             >{item}
                             </RN.Text>
                             {
-                                this.selection.has(this.months[this.state.activeDate.getMonth()])
+                                selection.has(months[state.activeDate.getMonth()])
                                     &&
-                                    this.selection.get(this.months[this.state.activeDate.getMonth()]) == Number(item)
+                                    selection.get(months[state.activeDate.getMonth()]) == Number(item)
                                     ||
-                                    this.selection.has(this.months[this.state.activeDate.getMonth()])
+                                    selection.has(months[state.activeDate.getMonth()])
                                     &&
-                                    Array.from(this.selection.get(this.months[this.state.activeDate.getMonth()])).includes(Number(item))
+                                    Array.from(selection.get(months[state.activeDate.getMonth()])).includes(Number(item))
                                     ?
                                     <RN.View key={item} style={{
                                         alignSelf: 'center', backgroundColor: 'black',
@@ -223,25 +224,25 @@ class TimeSheet extends React.Component {
                 <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <RN.View style={styles.header}>
                         <RN.Text style={styles.monthText}>
-                            {this.months[this.state.activeDate.getMonth()]} &nbsp;
-                            {this.state.activeDate.getFullYear()}
+                            {months[state.activeDate.getMonth()]} &nbsp;
+                            {state.activeDate.getFullYear()}
                         </RN.Text>
                     </RN.View>
                     <RN.View style={styles.arrows}>
                         <Ionicons name='chevron-back-outline' color={'black'} size={40}
-                            onPress={() => this.changeMonth(-1)} />
+                            onPress={() => changeMonth(-1)} />
                         <Ionicons name='chevron-forward-outline' color={'black'} size={40}
-                            onPress={() => this.changeMonth(+1)} />
+                            onPress={() => changeMonth(+1)} />
                     </RN.View>
                 </RN.View>
                 {rows}
-                <Dialog visible={this.state.visible}
-                    onDismiss={() => this.toggleVisibility()}
+                <Dialog visible={state.visible}
+                    onDismiss={() => toggleVisibility()}
                     style={{ width: '50%', alignSelf: 'center' }}>
                     <Dialog.Title>Add Task</Dialog.Title>
                     <Dialog.Content style={{ flexDirection: 'row' }}>
                         {/* <Text>Title</Text> */}
-                        <TextInput label={'Title'} onChangeText={text => this.saveText(text)} />
+                        <TextInput label={'Title'} onChangeText={text => saveText(text)} />
                         {/* <ScrollView style={{ height: '380px' }}>
                             {items.map((l, i) =>
                             (<ListItem key={i} bottomDivider containerStyle={{ backgroundColor: 'trans' }}>
@@ -257,8 +258,8 @@ class TimeSheet extends React.Component {
                         </ScrollView> */}
                     </Dialog.Content>
                     <Dialog.Actions>
-                        {/* <Button title='Conferma' onPress={() => this.toggleVisibility()} /> */}
-                        <Button title='Conferma' onPress={() => this.confirmTask()} />
+                        {/* <Button title='Conferma' onPress={() => toggleVisibility()} /> */}
+                        <Button title='Conferma' onPress={() => confirmTask()} />
                     </Dialog.Actions>
                 </Dialog>
             </RN.SafeAreaView>
@@ -267,7 +268,7 @@ class TimeSheet extends React.Component {
 }
 
 // Export for now to get rid of error and see preview:
-export default TimeSheet
+// export default TimeSheet
 
 
 const styles = StyleSheet.create({

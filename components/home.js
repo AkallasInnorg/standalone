@@ -1,24 +1,18 @@
-import React, { useEffect, useState, useReducer } from 'react';
-import { StyleSheet, Text, View, ScrollView, useWindowDimensions } from 'react-native';
-import { Button, Card } from 'react-native-elements';
+import React, { useEffect, useState, useReducer, useRef } from 'react';
+import { StyleSheet, Text, View, ScrollView, useWindowDimensions, Animated, TextInput, SafeAreaView } from 'react-native';
+import { Button, Card, Overlay, ListItem } from 'react-native-elements';
 import axios from 'axios';
+import { Dialog, Title } from 'react-native-paper';
 
-import GoogleGantt from './googleGantt';
-import MyCalendar from './calendar';
-import PapaerCalendar from './paperDates';
-import CustomHeader from './customHeaderPartial';
+import SelectDropdown from 'react-native-select-dropdown';
 import ProvaCustomHeader from './provaCustomHeader';
 import globalStyles from '../utils/globalStyles';
-import Gantt from './defGoogleGant';
-import DetailsCard from './detailCard';
-import MyGantt from './gantt';
-import TimeSheet from './timeSheet';
-import OtherTimeSHeet from './otherTimesheet';
-import MyAgenda from './agenda';
-import WeekTimeSHeet from './weekTimeSheet';
-import TabViewExample from './tabView';
-import WeekTimeSHeetFunc from './week_func_timesheet';
 import MonthGantt from './monthGantt/customGantt';
+import WeekTimeSHeetFunc from './week_func_timesheet';
+import FilterBar from './filterBar';
+import TimeSheet from './timeSheet';
+import TimeSheetFunc from './timeSheetFunc';
+
 
 
 //NEW YORK
@@ -26,13 +20,14 @@ export default function Home() {
     const periods = ['il tuo giorno', 'la tua settimana', 'il tuo mese'];
     var [period, setPeriod] = useState(periods[0]);
     var [count, setCount] = useState(0);
+    var [visible1, setVisible1] = useState(true)
     var [id, setId] = useState('');
     var row = [];
     var rows = [];
     var dates = [];
     var arrayOfDates = [];
     var properties = [];
-    var dets = []; 
+    var dets = [];
     var detailsData;
     var per = ProvaCustomHeader
 
@@ -219,35 +214,190 @@ export default function Home() {
 
     useEffect(() => { getData(); }, [rows]);
     const [, forceUpdate] = useReducer(x => x + 1, 0);
-    const renderText = ()=>{
+    const renderText = () => {
         console.log('renderizzare')
         setId(global.taskId)
         forceUpdate()
     }
 
-    
+    const [visible, setVisible] = useState(false);
+    function toggleOver() {
+        setVisible(!visible);
+    }
 
-    
+    const list = [
+        {
+            name: 'Amir Kallas',
+            subTitle: 'Junior developer'
+        },
+        {
+            name: 'Francesca Caivano',
+            subTitle: 'Senior developer'
+        },
+        {
+            name: "Marco D'Araio",
+            subTitle: 'Middle developer'
+        },
+        {
+            name: "Marco D'Araio",
+            subTitle: 'Middle developer'
+        },
+        {
+            name: "Marco D'Araio",
+            subTitle: 'Middle developer'
+        },
+        {
+            name: "Marco D'Araio",
+            subTitle: 'Middle developer'
+        }
+    ]
+
+    var drop = (plHolder, opener, setOpener, width) => {
+        return <View
+            style={{ width: width }}
+        ><DropDownPicker
+                zIndex={3000}
+                zIndexInverse={3000}
+                style={{ borderRadius: 20 }}
+                placeholderStyle={{ borderRadius: 20 }}
+                searchContainerStyle={{ borderRadius: 20 }}
+                dropDownContainerStyle={{ borderRadius: 20 }}
+                containerStyle={{ borderRadius: 20 }}
+                theme="DARK"
+                placeholder={plHolder}
+                autoScroll={true}
+                open={opener}
+                value={value}
+                items={items}
+                setOpen={setOpener}
+                setValue={setValue}
+                setItems={setItems}
+            /></View>
+    }
+
+    const [toggle, setToggle] = useState(true)
+    const toggleHeight = useRef(new Animated.Value(500)).current;
+
+    function toggleVisibility() { setVisible1(!visible1) }
 
     return (
         <ScrollView>
             <View style={globalStyles().containerHome}>
-                <Button
-                onPress={() => console.log(global.taskId)}
-                ></Button>
-                <hr/>
-                <Card  
-                containerStyle={{borderRadius: 20, height: '40%', width: '70%', backgroundColor: 'plum'}}>
-                    {/* {renderDetails(id)} */}
-                    {(id == '') ? <></> : 
-                    <Text>{id}</Text> }
-                </Card>
-                <hr/>
-                <MonthGantt method2={()=>renderText()}
-                // method={()=>console.log()}
-                />
+                <hr />
+                {/* <View>
+                    <Button title="Open Overlay" onPress={toggleOver} />
+                    <Overlay isVisible={visible} onBackdropPress={toggleOver} overlayStyle={{
+                        padding: 0, borderRadius: 20
+                    }}>
+                        <Card containerStyle={{
+                            backgroundColor: 'plum', margin: 0, borderRadius: 15,
+                            height: '400px', width: '400px'
+                        }}>
+                            <ScrollView style={{height: '380px'}}>
+                                {list.map((l, i) =>
+                                   ( <ListItem key={i} bottomDivider containerStyle={{backgroundColor: 'trans'}}>
+                                        <ListItem.Content>
+                                            <ListItem.Title>
+                                                {l.name}
+                                            </ListItem.Title>
+                                            <ListItem.Subtitle>
+                                                {l.subTitle}
+                                            </ListItem.Subtitle>
+                                        </ListItem.Content>
+                                    </ListItem>)
+                                )
+                                }
+                            </ScrollView>
+                        </Card>
+                    </Overlay>
+                </View> */}
+                {/* <FilterBar animatedHeight={toggleHeight} toggle={toggle}/> */}
+                {/* <WeekTimeSHeetFunc/> */}
+                {/* <Button title="Open Overlay" onPress={toggleOver} /> */}
+                <Button title="Open Overlay" onPress={toggleVisibility} />
+                {/* <TimeSheetFunc/> */}
+                <MonthGantt />
+                <Dialog visible={visible1}
+                    onDismiss={() => toggleVisibility()}
+                    style={{ width: '70%', alignSelf: 'center', height: '90%' }}>
+                    <Dialog.Title style={{ fontSize: '250%' }}>Add Task</Dialog.Title>
+                    <Dialog.Content style={{
+                        // flexDirection: 'row',
+                        flexDirection: 'column',
+                        // columnGap: '10%',
+                        rowGap: '10%',
+                        height: '80%', width: '100%'
+                    }}>
+                        <SafeAreaView style={{ flexDirection: 'row', columnGap: '10%', height: '70%' }}>
+                            <SafeAreaView style={{ flexDirection: 'column' }}>
+                                <Text style={{ fontSize: '120%' }}>Attività svolta presso:</Text>
+                                <SelectDropdown dropdownStyle={{backgroundColor: 'plum'}}/>
+                            </SafeAreaView>
+                        </SafeAreaView>
+                        <SafeAreaView style={{ flexDirection: 'row', columnGap: '10%', height: '70%' }}>
+                            <SafeAreaView style={styles.container}>
+                                <Text style={{ fontSize: '120%' }}>Descrizione:</Text>
+                                <View style={styles.containerView}>
+                                    <TextInput
+                                        style={styles.inputSimpleBorder}
+                                        placeholder="Enter Description"
+                                        placeholderTextColor={'grey'}
+                                        multiline={true}
+                                        numberOfLines={5}
+                                    />
+                                </View>
+                            </SafeAreaView>
+                            <SafeAreaView style={styles.container}>
+                                <Text style={{ fontSize: '120%' }}>Note interne:</Text>
+                                <View style={styles.containerView}>
+                                    <TextInput
+                                        style={styles.inputSimpleBorder}
+                                        placeholder="Enter Internal note"
+                                        placeholderTextColor={'grey'}
+                                        multiline={true}
+                                        numberOfLines={5}
+                                    />
+                                </View>
+                            </SafeAreaView>
+                        </SafeAreaView>
+                    </Dialog.Content>
+                    <Dialog.Actions style={{ alignItems: 'flex-end' }}>
+                        <Button
+                            containerStyle={{ backgroundColor: 'white' }} buttonStyle={{ backgroundColor: 'grey' }}
+                            title='Annulla' onPress={() => toggleVisibility()} />
+                        <Button title='Conferma' onPress={() => toggleVisibility()} />
+                    </Dialog.Actions>
+                </Dialog>
                 <hr />
             </View>
         </ScrollView>
     );
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'flex-start',
+        width: '45%',
+        flexDirection: 'column',
+        rowGap: '3%',
+        // paddingBottom: '10px'
+    },
+    containerView: {
+        height: '70%',
+        // width: '100%'
+        // marginTop: '70%',
+        // padding: 30,
+    },
+    inputSimpleBorder: {
+        // borderRadius: '15',
+        // marginBottom: 15,
+        // backgroundColor: "white",
+        borderWidth: 1,
+        borderColor: 'grey',
+        padding: '2%',
+        fontSize: 15,
+        textAlignVertical: 'top',
+        height: '60%'
+    },
+});

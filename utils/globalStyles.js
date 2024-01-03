@@ -58,6 +58,16 @@ export default function CustomStyles() {
             padding: 10,
             marginRight: 10,
             marginTop: 17
+        },
+        filterBar: {
+            backgroundColor: colors.border,
+            borderRadius: 20, 
+            height: '20px', 
+            width: '98%',  
+            marginBottom: '0px',
+            paddingBottom: '0px',
+            borderBottomWidth: '0px',
+            flexDirection: 'row'
         }
     })
 }

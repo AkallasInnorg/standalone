@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Dialog, Title } from 'react-native-paper';
 
 import SelectDropdown from 'react-native-select-dropdown';
+
+import AddTaskDialog from './dialogTask';
 import ProvaCustomHeader from './provaCustomHeader';
 import globalStyles from '../utils/globalStyles';
 import MonthGantt from './monthGantt/customGantt';
@@ -112,26 +114,11 @@ export default function Home() {
                         },
                     ],
                 };
-                // };
-                // console.log()
-                // properties.push(property);
             }
         console.log(properties)
-        // fill()
-        // console.log(myList)
         return properties;
     }
 
-    // var myList = Object.keys(properties).map(function(key){
-    //     return {label: key, value: properties[key]}
-    // });
-    // var myList = [];
-    // function fill() {
-    //     myList = []
-    //     Object.keys(properties).map(function (key) {
-    //         myList.push(properties[key])
-    //     });
-    // }
 
     function getData() {
         axios.get('http://127.0.0.1:3000/task/all').
@@ -276,98 +263,52 @@ export default function Home() {
     }
 
     const [toggle, setToggle] = useState(true)
-    const toggleHeight = useRef(new Animated.Value(500)).current;
+    const toggleHeight = useRef(new Animated.Value(300)).current;
 
     function toggleVisibility() { setVisible1(!visible1) }
+
+    function cardRow() {
+        return (<>
+            <Card containerStyle={styles.cardStyle}>
+            </Card>
+            <Card containerStyle={styles.cardStyle}>
+            </Card>
+            <Card containerStyle={styles.cardStyle}>
+            </Card>
+            <Card containerStyle={styles.cardStyle}>
+            </Card>
+            <Card containerStyle={styles.cardStyle}>
+            </Card></>
+        )
+    }
 
     return (
         <ScrollView>
             <View style={globalStyles().containerHome}>
                 <hr />
-                {/* <View>
-                    <Button title="Open Overlay" onPress={toggleOver} />
-                    <Overlay isVisible={visible} onBackdropPress={toggleOver} overlayStyle={{
-                        padding: 0, borderRadius: 20
-                    }}>
-                        <Card containerStyle={{
-                            backgroundColor: 'plum', margin: 0, borderRadius: 15,
-                            height: '400px', width: '400px'
-                        }}>
-                            <ScrollView style={{height: '380px'}}>
-                                {list.map((l, i) =>
-                                   ( <ListItem key={i} bottomDivider containerStyle={{backgroundColor: 'trans'}}>
-                                        <ListItem.Content>
-                                            <ListItem.Title>
-                                                {l.name}
-                                            </ListItem.Title>
-                                            <ListItem.Subtitle>
-                                                {l.subTitle}
-                                            </ListItem.Subtitle>
-                                        </ListItem.Content>
-                                    </ListItem>)
-                                )
-                                }
-                            </ScrollView>
-                        </Card>
-                    </Overlay>
-                </View> */}
-                {/* <FilterBar animatedHeight={toggleHeight} toggle={toggle}/> */}
-                {/* <WeekTimeSHeetFunc/> */}
-                {/* <Button title="Open Overlay" onPress={toggleOver} /> */}
-                <Button title="Open Overlay" onPress={toggleVisibility} />
-                {/* <TimeSheetFunc/> */}
-                <MonthGantt />
-                <Dialog visible={visible1}
-                    onDismiss={() => toggleVisibility()}
-                    style={{ width: '70%', alignSelf: 'center', height: '90%' }}>
-                    <Dialog.Title style={{ fontSize: '250%' }}>Add Task</Dialog.Title>
-                    <Dialog.Content style={{
-                        // flexDirection: 'row',
-                        flexDirection: 'column',
-                        // columnGap: '10%',
-                        rowGap: '10%',
-                        height: '80%', width: '100%'
-                    }}>
-                        <SafeAreaView style={{ flexDirection: 'row', columnGap: '10%', height: '70%' }}>
-                            <SafeAreaView style={{ flexDirection: 'column' }}>
-                                <Text style={{ fontSize: '120%' }}>Attività svolta presso:</Text>
-                                <SelectDropdown dropdownStyle={{backgroundColor: 'plum'}}/>
-                            </SafeAreaView>
-                        </SafeAreaView>
-                        <SafeAreaView style={{ flexDirection: 'row', columnGap: '10%', height: '70%' }}>
-                            <SafeAreaView style={styles.container}>
-                                <Text style={{ fontSize: '120%' }}>Descrizione:</Text>
-                                <View style={styles.containerView}>
-                                    <TextInput
-                                        style={styles.inputSimpleBorder}
-                                        placeholder="Enter Description"
-                                        placeholderTextColor={'grey'}
-                                        multiline={true}
-                                        numberOfLines={5}
-                                    />
-                                </View>
-                            </SafeAreaView>
-                            <SafeAreaView style={styles.container}>
-                                <Text style={{ fontSize: '120%' }}>Note interne:</Text>
-                                <View style={styles.containerView}>
-                                    <TextInput
-                                        style={styles.inputSimpleBorder}
-                                        placeholder="Enter Internal note"
-                                        placeholderTextColor={'grey'}
-                                        multiline={true}
-                                        numberOfLines={5}
-                                    />
-                                </View>
-                            </SafeAreaView>
-                        </SafeAreaView>
-                    </Dialog.Content>
-                    <Dialog.Actions style={{ alignItems: 'flex-end' }}>
-                        <Button
-                            containerStyle={{ backgroundColor: 'white' }} buttonStyle={{ backgroundColor: 'grey' }}
-                            title='Annulla' onPress={() => toggleVisibility()} />
-                        <Button title='Conferma' onPress={() => toggleVisibility()} />
-                    </Dialog.Actions>
-                </Dialog>
+                {/* <Card containerStyle={{
+                    width: '90%',
+                    height: '90%',
+                    backgroundColor: 'plum',
+                    borderRadius: 15,
+                    flexDirection: 'column',
+                    flex: 1
+                }}> */}
+                <View style={styles.viewStyle}>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around' }}>
+                        {cardRow()}
+                    </View>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around' }}>
+                        {cardRow()}
+                    </View>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around' }}>
+                        {cardRow()}
+                    </View>
+                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around', paddingBottom: '1%' }}>
+                        {cardRow()}
+                    </View>
+                    {/* </Card> */}
+                </View>
                 <hr />
             </View>
         </ScrollView>
@@ -376,23 +317,34 @@ export default function Home() {
 
 
 const styles = StyleSheet.create({
+    cardStyle: {
+        width: '18%',
+        height: '90%',
+        backgroundColor: 'black',
+        borderRadius: 15,
+        // verticalAlign: 'middle',
+    },
+    viewStyle: {
+        // rowGap: '10%',
+        width: '90%',
+        height: '90%',
+        backgroundColor: 'plum',
+        borderRadius: 15,
+        flexDirection: 'column',
+        // paddingBottom: '1%',
+        flex: 1
+    },
     container: {
         justifyContent: 'flex-start',
         width: '45%',
         flexDirection: 'column',
         rowGap: '3%',
-        // paddingBottom: '10px'
     },
     containerView: {
-        height: '70%',
-        // width: '100%'
-        // marginTop: '70%',
-        // padding: 30,
+        height: '70%'
     },
     inputSimpleBorder: {
-        // borderRadius: '15',
-        // marginBottom: 15,
-        // backgroundColor: "white",
+        borderRadius: 15,
         borderWidth: 1,
         borderColor: 'grey',
         padding: '2%',
@@ -400,4 +352,63 @@ const styles = StyleSheet.create({
         textAlignVertical: 'top',
         height: '60%'
     },
+    dialogStyle: {
+        width: '70%',
+        alignSelf: 'center',
+        height: '90%'
+    },
+    titleStyle: {
+        fontSize: '250%',
+        textAlign: 'center'
+    },
+    contentStyle: {
+        flexDirection: 'column',
+        rowGap: '25%',
+        height: '80%',
+        width: '100%'
+    },
+    firstRow: {
+        flexDirection: 'row',
+        columnGap: '10%',
+        height: '20%',
+        width: '40%',
+        flex: 1
+    },
+    firstDDStyle: {
+        color: 'plum',
+        backgroundColor: 'plum',
+        borderRadius: 15
+    },
+    firstDbutton: {
+        color: 'plum',
+        backgroundColor: 'plum',
+        borderRadius: 15,
+        width: '140%'
+    },
+    secondRow: {
+        flexDirection: 'row',
+        columnGap: '10%',
+        height: '40%',
+        width: '80%',
+        flex: 1
+    },
+    secondDDStyle: {
+        color: 'plum',
+        backgroundColor: 'plum',
+        borderRadius: 15
+    },
+    secondDButton: {
+        color: 'plum',
+        backgroundColor: 'plum',
+        borderRadius: 15,
+        width: '100%',
+        flexWrap: 'wrap'
+    },
+    hourText: {
+        backgroundColor: 'plum',
+        width: '60%',
+        fontSize: 25,
+        padding: '2.5%',
+        borderRadius: 15
+    }
 });

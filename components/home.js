@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useReducer, useRef } from 'react';
-import { StyleSheet, Text, View, ScrollView, useWindowDimensions, Animated, TextInput, SafeAreaView } from 'react-native';
+import {
+    StyleSheet, Text, View, ScrollView, FlatList,
+    useWindowDimensions, Animated, TextInput, SafeAreaView
+} from 'react-native';
 import { Button, Card, Overlay, ListItem } from 'react-native-elements';
 import axios from 'axios';
 import { Dialog, Title } from 'react-native-paper';
@@ -14,6 +17,7 @@ import WeekTimeSHeetFunc from './week_func_timesheet';
 import FilterBar from './filterBar';
 import TimeSheet from './timeSheet';
 import TimeSheetFunc from './timeSheetFunc';
+import WikiGridList from './wikiGridList';
 
 
 
@@ -282,19 +286,39 @@ export default function Home() {
         )
     }
 
+    const dataSource = [
+        { id: 1, item: 'File1' },
+        { id: 2, item: 'File2' },
+        { id: 3, item: 'File3' },
+        { id: 4, item: 'File4' },
+        { id: 5, item: 'File5' },
+        { id: 6, item: 'File6' },
+        { id: 7, item: 'File7' },
+        { id: 8, item: 'File8' },
+        { id: 9, item: 'File9' },
+        { id: 10, item: 'File10' },
+        { id: 11, item: 'File11' },
+        { id: 12, item: 'File12' },
+        { id: 13, item: 'File13' },
+        { id: 14, item: 'File14' },
+        { id: 15, item: 'File15' },
+        { id: 16, item: 'File16' },
+        { id: 17, item: 'File17' },
+        { id: 18, item: 'File18' },
+        { id: 19, item: 'File19' },
+        { id: 20, item: 'File20' },
+        { id: 21, item: 'File21' },
+        { id: 22, item: 'File22' },
+        { id: 23, item: 'File23' },
+        { id: 24, item: 'File24' },
+        { id: 25, item: 'File25' },
+    ]
+
     return (
         <ScrollView>
             <View style={globalStyles().containerHome}>
                 <hr />
-                {/* <Card containerStyle={{
-                    width: '90%',
-                    height: '90%',
-                    backgroundColor: 'plum',
-                    borderRadius: 15,
-                    flexDirection: 'column',
-                    flex: 1
-                }}> */}
-                <View style={styles.viewStyle}>
+                {/* <View style={styles.viewStyle}>
                     <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around' }}>
                         {cardRow()}
                     </View>
@@ -307,8 +331,29 @@ export default function Home() {
                     <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'space-around', paddingBottom: '1%' }}>
                         {cardRow()}
                     </View>
-                    {/* </Card> */}
-                </View>
+                    </View> */}
+                    {<WikiGridList/>}
+
+                {/* <SafeAreaView style={styles.container1}>
+                    <FlatList
+                        columnWrapperStyle={{
+                            flex: 1,
+                            paddingVertical: 0,
+                        }}
+                        data={dataSource}
+                        renderItem={({ item }) => (
+                            // <View style={{ flex: 1, flexDirection: 'column', margin: 1 }}>
+                            //     <Text>{item.item}</Text>
+                            // </View>
+                            <Card containerStyle={styles.cardStyle1}>
+                                <Text style={{ color: 'white' }}>{item.item}</Text>
+                            </Card>
+                        )}
+                        //Setting the number of column
+                        numColumns={5}
+                        keyExtractor={(item, index) => index}
+                    />
+                </SafeAreaView> */}
                 <hr />
             </View>
         </ScrollView>
@@ -322,6 +367,16 @@ const styles = StyleSheet.create({
         height: '90%',
         backgroundColor: 'black',
         borderRadius: 15,
+        // verticalAlign: 'middle',
+    },
+    cardStyle1: {
+        flex: 1,
+        width: '30%',
+        height: '100%',
+        backgroundColor: 'black',
+        borderRadius: 15,
+        margin: 0,
+        paddingVertical: '8%'
         // verticalAlign: 'middle',
     },
     viewStyle: {
@@ -339,6 +394,13 @@ const styles = StyleSheet.create({
         width: '45%',
         flexDirection: 'column',
         rowGap: '3%',
+    },
+    container1: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: 'plum',
+        width: '90%',
+        borderRadius: 15
     },
     containerView: {
         height: '70%'

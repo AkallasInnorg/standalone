@@ -6,7 +6,7 @@ import { Dialog, TextInput, Card } from 'react-native-paper';
 import { ListItem } from 'react-native-elements';
 import axios from 'axios';
 // import { Card } from 'react-native-elements';
-
+import WeekAddTaskDialog from './weekDialog';
 
 
 export default function WeekTimeSHeetFunc({ items }) {
@@ -23,31 +23,63 @@ export default function WeekTimeSHeetFunc({ items }) {
 
     var selection = new Map()
 
-    var selDays = []
+    var newTask = []
 
     var state = {
         activeDate: new Date(),
         visible: false,
         text: '',
         daySelected: null,
+        weekSelected: null,
         monthSelected: null,
         weekNun: 1
     }
 
-    const currentWeek = getCurrentWeekNumber()
+    const currentWeek = getCurrentWeekNumber();
 
-    const [weekNum, setWeekNum] = useState(currentWeek)
-    const [year, setYear] = useState(state.activeDate.getFullYear())
+    const [visible, setVisible] = useState(false);
+    const [weekNum, setWeekNum] = useState(currentWeek);
+    const [year, setYear] = useState(state.activeDate.getFullYear());
+    const [dets, setDets] = useState([]);
+    const [taskIds, setTaskIds] = useState({});
+    const [commission, setCommission] = useState(null);
 
-    var dets = []
+
+    // var dets = []
 
     function getData() {
-        axios.get('http://127.0.0.1:3000/task/all').
+        // axios.get('http://127.0.0.1:3000/task/all').
+        axios.get('http://localhost:3000/task/all').
+            // axios.get('http://192.168.1.61:3000/task/all/0').
             then(
                 function (res) {
-                    dets = res.data;
+                    if (dets.length === 0)
+                        // dets = res.data;
+                        setDets(res.data);
                     console.log(dets)
                 })
+    }
+
+    function getTaskIds() {
+        var localTaskIds = []
+        var gni = {};
+        // axios.get('http://127.0.0.1:3000/task/all').
+        axios.get('http://localhost:3000/task/all').
+            // axios.get('http://192.168.1.61:3000/task/all/0').
+            then(
+                function (res) {
+                    var fetchData = res.data
+                    console.log(res.data)
+                    fetchData.map((val, idx) => {
+                        var thisId = val.ID;
+                        var strID = String(val.ID)
+                        var lline = `${strID}-${val.ticket}-${val.description}`
+                        gni[thisId] = lline;
+                        console.log(gni);
+                        localTaskIds.push(gni);
+                    })
+                }).
+            then(() => { setTaskIds(gni); console.log(taskIds); console.log(gni) })
     }
 
     function changeWeek(n) {
@@ -71,19 +103,19 @@ export default function WeekTimeSHeetFunc({ items }) {
         return weekNum
     }
 
-    function toggleVisibility(item, month) {
-        this.setState(() => {
-            this.state.visible = !this.state.visible
-            if (item) {
-                this.state.daySelected = item
-                this.state.monthSelected = month
-                console.log(this.state.daySelected);
-                console.log(this.state.monthSelected);
-                console.log(typeof (item));
-                console.log(typeof (month))
-            }
-            return this.state;
-        })
+    // function toggleVisibility(item, month) {
+    function toggleVisibility(day, week) {
+        setVisible(!visible)
+        if (day) {
+            state.daySelected = day
+            state.weekSelected = week
+            console.log(state.daySelected);
+            console.log(state.weekSelected);
+            console.log(typeof (day));
+            console.log(typeof (week));
+        }
+        console.log('visible: ', visible)
+        return visible;
     }
 
     function confirmTask() {
@@ -132,36 +164,68 @@ export default function WeekTimeSHeetFunc({ items }) {
 
     useEffect(() => { getData() }, [dets])
 
+    function renderTask() {
+        var tasks = []
+        tasks = dets.map((val, idx) => {
+            console.log(val)
+            var start = new Date(val.dev_start);
+            var end = new Date(val.planned_release);
+            console.log(end - start);
+            return (
+                <View key={idx} style={{
+                    flexDirection: 'column',
+                    alignSelf: 'center', backgroundColor: 'grey',
+                    height: '20%', marginBottom: '3%', width: '100%', borderRadius: 20
+                }}>
+                    <Text style={{ paddingTop: '3%' }} numberOfLines={1}>
+                        4h - &nbsp;
+                        {val.description}
+                    </Text>
+                    <Text style={{ paddingTop: '3%' }} numberOfLines={1}>
+                        {val.commission} - &nbsp;
+                        {val.customer}
+                    </Text>
+                </View>
+            )
+        })
+        return tasks;
+    }
+
     function renderRows() {
         var rows = [];
         rows = weekDays.map((val, idx) => {
-            return (
-                <RN.View key={idx + 1} style={{ flexDirection: 'column', height: '96.7%', width: '14.28%' }}>
-                    <Text key={idx + 2} style={{ alignSelf: 'center', bottom: '1%' }}>{weekDays[idx]}</Text>
-                    <Card key={idx} style={{ backgroundColor: 'trans', height: '100%', width: '100%', flexDirection: 'column' }}>
-                        <View key={idx} style={{
+            console.log(val)
+            if (idx != 5 && idx != 6)
+                return (
+                    <RN.View key={idx + 1} style={{ flexDirection: 'column', height: '96.7%', width: '20%' }}>
+                        <Text key={idx + 2} style={{ alignSelf: 'center', bottom: '1%' }}>{weekDays[idx]}</Text>
+                        <Card
+                            key={idx}
+                            style={{ backgroundColor: 'trans', height: '100%', width: '100%', flexDirection: 'column', borderRadius: 20 }}
+                            onPress={() => toggleVisibility(val, weekNum)}>
+                            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ height: '100%' }} style={{ height: '600px' }}>
+                                {/* <View key={idx} style={{
                             alignSelf: 'center', backgroundColor: 'white',
                             height: '10%', marginBottom: '80%', width: '100%', borderRadius: 20
-                        }}><Text>{state.text}</Text></View>
-                        {/* IL TASK DEVE CORRISPONDERE PER NUMERO DI SETTIMANA, PER GIORNO DELLA SETTIMANA  E PER ANNO*/}
-                    </Card>
-                </RN.View>
-            )
+                        }}><Text>{state.text}</Text></View> */}
+                                {renderTask()}</ScrollView>
+                            {/* IL TASK DEVE CORRISPONDERE PER NUMERO DI SETTIMANA, PER GIORNO DELLA SETTIMANA  E PER ANNO*/}
+                        </Card>
+                    </RN.View>
+                )
         }); return rows;
     }
     return (
         <>
-            <RN.View><Button onPress={() => getCurrentWeekNumber('2023-02-05T23:00:00.000Z')}></Button></RN.View>
+            {/* <RN.View><Button onPress={() => getCurrentWeekNumber('2023-02-05T23:00:00.000Z')}></Button></RN.View> */}
+            <RN.View><Button onPress={() => getTaskIds()}></Button></RN.View>
+            <RN.View><Button onPress={() => toggleVisibility()}></Button></RN.View>
             <RN.View style={{ flex: 1, flexDirection: 'row', height: '100%', width: '90%', zIndex: 1000 }}>
                 <RN.SafeAreaView style={styles.safeArea}>
-                    <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between', zIndex: 1000 }}>
+                    <RN.View style={{ flexDirection: 'row', justifyContent: 'space-between', height: '12%' }}>
                         <RN.View style={styles.header}>
                             <RN.Text style={styles.monthText}>
-                                {/* {this.months[this.state.activeDate.getMonth()]} &nbsp; */}
-                                {/* {state.activeDate.getFullYear()} &nbsp; */}
                                 {year} &nbsp;
-                                {/* Settimana N° {getCurrentWeekNumber()} */}
-                                {/* Settimana N° {state.weekNun} */}
                                 Settimana N° {weekNum}
                             </RN.Text>
                         </RN.View>
@@ -175,15 +239,14 @@ export default function WeekTimeSHeetFunc({ items }) {
                     <RN.View style={{ flexDirection: 'row', flex: 1 }}>
                         {renderRows()}
                     </RN.View>
-                    <Dialog visible={state.visible}
+                    <WeekAddTaskDialog visible={true} method={()=>toggleVisibility()} data={Object.values(taskIds)}/>
+                    {/* <Dialog visible={visible}
                         onDismiss={() => toggleVisibility()}
                         style={{ width: '50%', alignSelf: 'center' }}>
                         <Dialog.Title>Add Task</Dialog.Title>
                         <Dialog.Content style={{ flexDirection: 'row' }}>
-                            {/* <Text>Title</Text> */}
-                            {/* <TextInput label={'Title'} onChangeText={text => saveText(text)} /> */}
                             <ScrollView style={{ height: '380px' }}>
-                                {items.map((l, i) =>
+                                {dets.map((l, i) =>
                                 (<ListItem key={i} bottomDivider containerStyle={{ backgroundColor: 'trans' }}>
                                     <ListItem.Content>
                                         <ListItem.Title>
@@ -199,10 +262,9 @@ export default function WeekTimeSHeetFunc({ items }) {
                             </ScrollView>
                         </Dialog.Content>
                         <Dialog.Actions>
-                            {/* <Button title='Conferma' onPress={() => this.toggleVisibility()} /> */}
                             <Button title='Conferma' onPress={() => confirmTask()} />
                         </Dialog.Actions>
-                    </Dialog>
+                    </Dialog> */}
                 </RN.SafeAreaView></RN.View></>
     );
     // }

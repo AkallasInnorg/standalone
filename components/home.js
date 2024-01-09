@@ -125,7 +125,9 @@ export default function Home() {
 
 
     function getData() {
-        axios.get('http://127.0.0.1:3000/task/all').
+        // axios.get('http://127.0.0.1:3000/task/all').
+        axios.get('http://localhost:3000/task/all').
+        // axios.get('http://192.168.1.61:3000/task/all/0').
             then(
                 function (res) {
                     // console.log(res.data);
@@ -332,7 +334,8 @@ export default function Home() {
                         {cardRow()}
                     </View>
                     </View> */}
-                    {<WikiGridList/>}
+                    {/* {<WikiGridList/>} */}
+                    <WeekTimeSHeetFunc items={dets}/>
 
                 {/* <SafeAreaView style={styles.container1}>
                     <FlatList

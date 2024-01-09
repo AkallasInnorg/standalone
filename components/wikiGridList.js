@@ -66,12 +66,12 @@ export default function WikiGridList() {
 const styles = StyleSheet.create({
     cardStyle1: {
         flex: 1,
-        width: '30%',
-        height: '20%',
+        width: '100%',
+        height: '1%',
         backgroundColor: 'black',
         borderRadius: 15,
         margin: 0,
-        paddingVertical: '8%'
+        paddingVertical: '2%'
     },
     container1: {
         flex: 1,

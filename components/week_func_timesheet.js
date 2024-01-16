@@ -23,7 +23,7 @@ export default function WeekTimeSHeetFunc({ items }) {
 
     var selection = new Map()
 
-    var newTask = []
+    var newTasks = []
 
     var state = {
         activeDate: new Date(),
@@ -42,27 +42,19 @@ export default function WeekTimeSHeetFunc({ items }) {
     const [year, setYear] = useState(state.activeDate.getFullYear());
     const [dets, setDets] = useState([]);
     const [taskIds, setTaskIds] = useState({});
+    const [subTasks, setSubTasks] = useState({});
+    const [text, setText] = useState('');
     const [commission, setCommission] = useState(null);
 
+    var currentId = null;
 
-    // var dets = []
-
-    function getData() {
-        // axios.get('http://127.0.0.1:3000/task/all').
-        axios.get('http://localhost:3000/task/all').
-            // axios.get('http://192.168.1.61:3000/task/all/0').
-            then(
-                function (res) {
-                    if (dets.length === 0)
-                        // dets = res.data;
-                        setDets(res.data);
-                    console.log(dets)
-                })
-    }
+    useEffect(() => { 
+        getTaskIds(); 
+        // getSubTasks(); 
+    }, [])
 
     function getTaskIds() {
-        var localTaskIds = []
-        var gni = {};
+        var lines = {};
         // axios.get('http://127.0.0.1:3000/task/all').
         axios.get('http://localhost:3000/task/all').
             // axios.get('http://192.168.1.61:3000/task/all/0').
@@ -73,13 +65,36 @@ export default function WeekTimeSHeetFunc({ items }) {
                     fetchData.map((val, idx) => {
                         var thisId = val.ID;
                         var strID = String(val.ID)
-                        var lline = `${strID}-${val.ticket}-${val.description}`
-                        gni[thisId] = lline;
-                        console.log(gni);
-                        localTaskIds.push(gni);
+                        var line = `${strID}-${val.ticket}-${val.description}`
+                        lines[thisId] = line;
+                        console.log(lines);
                     })
                 }).
-            then(() => { setTaskIds(gni); console.log(taskIds); console.log(gni) })
+            then(() => { setTaskIds(lines); console.log(taskIds); })
+    }
+
+    function getSubTasks() {
+        var lines = {};
+        // axios.get('http://localhost:3000/subtask/'). 
+        axios.get(`http://localhost:3000/subtask/${currentId}`). 
+            then(function (res) {
+                console.log(res.data);
+                var fetchData = res.data;
+                // if (subTasks.length < 1) {
+                fetchData.map((val, idx) => {
+                    var strId = String(val.sub_id);
+                    var line = `${strId}-${val.description}`;
+                    lines[val.sub_id] = line;
+                })
+                // }
+            }).then(() => { setSubTasks(lines), console.log(subTasks) })
+    }
+
+    function createNewTask(str) {
+        var id = Number(`${str[0]}${str[1]}`)
+        currentId = id
+        console.log(currentId)
+        getSubTasks()
     }
 
     function changeWeek(n) {
@@ -103,12 +118,13 @@ export default function WeekTimeSHeetFunc({ items }) {
         return weekNum
     }
 
-    // function toggleVisibility(item, month) {
-    function toggleVisibility(day, week) {
+
+    function toggleVisibility(year, week, day) {
         setVisible(!visible)
-        if (day) {
+        if (year) {
             state.daySelected = day
             state.weekSelected = week
+            console.log(year)
             console.log(state.daySelected);
             console.log(state.weekSelected);
             console.log(typeof (day));
@@ -138,11 +154,13 @@ export default function WeekTimeSHeetFunc({ items }) {
         this.toggleVisibility()
     }
 
-    function saveText(inputText) {
-        this.setState(() => {
-            this.state.text = inputText
-        })
-        console.log(this.state.text)
+    function saveText(str) {
+        // this.setState(() => {
+        //     this.state.text = inputText
+        // })
+        // console.log(this.state.text)
+        state.text = str;
+        console.log(state.text)
     }
 
     function getCurrentWeekNumber(date) {
@@ -162,7 +180,6 @@ export default function WeekTimeSHeetFunc({ items }) {
         return currWeek
     }
 
-    useEffect(() => { getData() }, [dets])
 
     function renderTask() {
         var tasks = []
@@ -191,7 +208,7 @@ export default function WeekTimeSHeetFunc({ items }) {
         return tasks;
     }
 
-    function renderRows() {
+    function renderColumns() {
         var rows = [];
         rows = weekDays.map((val, idx) => {
             console.log(val)
@@ -202,7 +219,8 @@ export default function WeekTimeSHeetFunc({ items }) {
                         <Card
                             key={idx}
                             style={{ backgroundColor: 'trans', height: '100%', width: '100%', flexDirection: 'column', borderRadius: 20 }}
-                            onPress={() => toggleVisibility(val, weekNum)}>
+                            // onPress={() => toggleVisibility(val, weekNum)}>
+                            onPress={() => toggleVisibility(year, weekNum, weekDays[idx])}>
                             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ height: '100%' }} style={{ height: '600px' }}>
                                 {/* <View key={idx} style={{
                             alignSelf: 'center', backgroundColor: 'white',
@@ -217,8 +235,8 @@ export default function WeekTimeSHeetFunc({ items }) {
     }
     return (
         <>
-            {/* <RN.View><Button onPress={() => getCurrentWeekNumber('2023-02-05T23:00:00.000Z')}></Button></RN.View> */}
             <RN.View><Button onPress={() => getTaskIds()}></Button></RN.View>
+            <RN.View><Button onPress={() => getSubTasks()}></Button></RN.View>
             <RN.View><Button onPress={() => toggleVisibility()}></Button></RN.View>
             <RN.View style={{ flex: 1, flexDirection: 'row', height: '100%', width: '90%', zIndex: 1000 }}>
                 <RN.SafeAreaView style={styles.safeArea}>
@@ -237,37 +255,12 @@ export default function WeekTimeSHeetFunc({ items }) {
                         </RN.View>
                     </RN.View>
                     <RN.View style={{ flexDirection: 'row', flex: 1 }}>
-                        {renderRows()}
+                        {renderColumns()}
                     </RN.View>
-                    <WeekAddTaskDialog visible={true} method={()=>toggleVisibility()} data={Object.values(taskIds)}/>
-                    {/* <Dialog visible={visible}
-                        onDismiss={() => toggleVisibility()}
-                        style={{ width: '50%', alignSelf: 'center' }}>
-                        <Dialog.Title>Add Task</Dialog.Title>
-                        <Dialog.Content style={{ flexDirection: 'row' }}>
-                            <ScrollView style={{ height: '380px' }}>
-                                {dets.map((l, i) =>
-                                (<ListItem key={i} bottomDivider containerStyle={{ backgroundColor: 'trans' }}>
-                                    <ListItem.Content>
-                                        <ListItem.Title>
-                                            {l.name}
-                                        </ListItem.Title>
-                                        <ListItem.Subtitle>
-                                            {l.subTitle}
-                                        </ListItem.Subtitle>
-                                    </ListItem.Content>
-                                </ListItem>)
-                                )
-                                }
-                            </ScrollView>
-                        </Dialog.Content>
-                        <Dialog.Actions>
-                            <Button title='Conferma' onPress={() => confirmTask()} />
-                        </Dialog.Actions>
-                    </Dialog> */}
+                    <WeekAddTaskDialog visible={visible} method={() => toggleVisibility()} method1={createNewTask} methodText={saveText}
+                        data={Object.values(taskIds)} data1={Object.values(subTasks)} />
                 </RN.SafeAreaView></RN.View></>
     );
-    // }
 }
 
 

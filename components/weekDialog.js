@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, SafeAreaView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { Button } from 'react-native-elements';
 
-export default function WeekAddTaskDialog({ data, visible, method }) {
+export default function WeekAddTaskDialog({ data, data1, visible, method, method1, methodText }) {
     return <>
         <Dialog visible={visible}
             onDismiss={method}
@@ -11,14 +11,16 @@ export default function WeekAddTaskDialog({ data, visible, method }) {
             <Dialog.Title style={styles.titleStyle}>Add Task</Dialog.Title>
             <Dialog.Content style={styles.contentStyle}>
                 <SafeAreaView style={styles.firstRow}>
-                    <SafeAreaView style={{ flexDirection: 'column' }}>
+                    <SafeAreaView style={{ flexDirection: 'column', width: '90%' }}>
                         <Text style={{ fontSize: '120%' }}>Attività:</Text>
                         <SelectDropdown
-                        
-                            buttonTextStyle={{ textAlign: 'justify', marginEnd: 0 }}
+                            selectedRowStyle={{ justifyContent: 'flex-start', alignContent: 'flex-start', paddingHorizontal: 0, marginHorizontal: 0 }}
+                            defaultButtonText='Select Task'
+                            // buttonTextStyle={{ textAlign: 'justify', marginEnd: 0, flexWrap:'wrap' }}
                             // selectedRowTextStyle={{textAlign: 'left', marginLeft: 0}}
                             rowTextStyle={{ textAlign: 'justify' }}
-                            onSelect={(sel, idx) => { console.log(sel, idx) }}
+                            // onSelect={(sel, idx) => { console.log(sel, idx) }}
+                            onSelect={(sel) => { method1(sel) }}
                             data={data}
                             dropdownStyle={styles.firstDDStyle}
                             rowStyle={{ color: 'plum', backgroundColor: 'plum' }}
@@ -32,7 +34,8 @@ export default function WeekAddTaskDialog({ data, visible, method }) {
                     <SafeAreaView style={{ flexDirection: 'column', flex: 1 }}>
                         <Text style={{ fontSize: '120%' }}>Sub-Attività:</Text>
                         <SelectDropdown
-                            // data={data}
+                            defaultButtonText='Select sub-task'
+                            data={data1}
                             dropdownStyle={styles.secondDDStyle}
                             rowStyle={{ color: 'plum', backgroundColor: 'plum' }}
                             buttonStyle={styles.secondDButton}
@@ -44,6 +47,7 @@ export default function WeekAddTaskDialog({ data, visible, method }) {
                         <Text style={{ fontSize: '120%' }}>Ore:</Text>
                         <View style={{ height: '70%' }}>
                             <TextInput
+                                onChangeText={(text) => { methodText(text) }}
                                 style={styles.hourText}
                                 inputMode='numeric'
                                 placeholder='0'
@@ -56,6 +60,7 @@ export default function WeekAddTaskDialog({ data, visible, method }) {
                         <Text style={{ fontSize: '120%' }}>Descrizione:</Text>
                         <View style={styles.containerView}>
                             <TextInput
+                                onChangeText={(text) => { methodText(text) }}
                                 style={styles.inputSimpleBorder}
                                 placeholder="Enter Description"
                                 placeholderTextColor={'grey'}
@@ -78,11 +83,14 @@ export default function WeekAddTaskDialog({ data, visible, method }) {
                     </SafeAreaView>
                 </SafeAreaView>
             </Dialog.Content>
-            <Dialog.Actions style={{ alignItems: 'flex-end', marginBottom: '20%' }}>
+            <Dialog.Actions style={{ alignItems: 'flex-end', flexDirection: 'row', columnGap: '2%' }}>
                 <Button
-                    containerStyle={{ backgroundColor: 'white' }} buttonStyle={{ backgroundColor: 'grey' }}
+                    containerStyle={{ bottom: '20%' }}
+                    buttonStyle={{ backgroundColor: 'grey' }}
                     title='Annulla' onPress={method} />
-                <Button title='Conferma' onPress={method} />
+                <Button
+                    containerStyle={{ bottom: '20%' }}
+                    title='Conferma' onPress={method} />
             </Dialog.Actions>
         </Dialog></>
 }
@@ -126,6 +134,7 @@ const styles = StyleSheet.create({
         columnGap: '10%',
         height: '20%',
         width: '40%',
+        backgroundColor: 'black',
         flex: 1
     },
     firstDDStyle: {
@@ -137,8 +146,8 @@ const styles = StyleSheet.create({
         color: 'plum',
         backgroundColor: 'plum',
         borderRadius: 15,
-        paddingRight: 0,
-        flexDirection: 'row',
+        width: '180%',
+        flexWrap: 'wrap'
     },
     secondRow: {
         flexDirection: 'row',
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'plum',
         borderRadius: 15,
         width: '100%',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
     },
     hourText: {
         backgroundColor: 'plum',

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, SafeAreaView } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { Button } from 'react-native-elements';
 
-export default function WeekAddTaskDialog({ data, data1, visible, method, method1, methodText }) {
+export default function WeekAddTaskDialog({ data, data1, visible, method, method1, methodText, methodNote, mothodHours }) {
     return <>
         <Dialog visible={visible}
             onDismiss={method}
@@ -47,7 +47,7 @@ export default function WeekAddTaskDialog({ data, data1, visible, method, method
                         <Text style={{ fontSize: '120%' }}>Ore:</Text>
                         <View style={{ height: '70%' }}>
                             <TextInput
-                                onChangeText={(text) => { methodText(text) }}
+                                onChangeText={(text) => { mothodHours(text) }}
                                 style={styles.hourText}
                                 inputMode='numeric'
                                 placeholder='0'
@@ -73,6 +73,7 @@ export default function WeekAddTaskDialog({ data, data1, visible, method, method
                         <Text style={{ fontSize: '120%' }}>Note interne:</Text>
                         <View style={styles.containerView}>
                             <TextInput
+                                onChangeText={(text) => { methodNote(text) }}
                                 style={styles.inputSimpleBorder}
                                 placeholder="Enter Internal note"
                                 placeholderTextColor={'grey'}
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
         color: 'plum',
         backgroundColor: 'plum',
         borderRadius: 15,
-        width: '180%',
+        width: '182%',
         flexWrap: 'wrap'
     },
     secondRow: {

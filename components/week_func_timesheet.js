@@ -29,6 +29,7 @@ export default function WeekTimeSHeetFunc({ items }) {
         activeDate: new Date(),
         visible: false,
         text: '',
+        note: '',
         daySelected: null,
         weekSelected: null,
         monthSelected: null,
@@ -91,10 +92,11 @@ export default function WeekTimeSHeetFunc({ items }) {
     }
 
     function createNewTask(str) {
-        var id = Number(`${str[0]}${str[1]}`)
+        // var id = Number(`${str[0]}${str[1]}`)
+        var id = taskIds[str]
         currentId = id
         console.log(currentId)
-        getSubTasks()
+        // getSubTasks()
     }
 
     function changeWeek(n) {
@@ -155,10 +157,6 @@ export default function WeekTimeSHeetFunc({ items }) {
     }
 
     function saveText(str) {
-        // this.setState(() => {
-        //     this.state.text = inputText
-        // })
-        // console.log(this.state.text)
         state.text = str;
         console.log(state.text)
     }

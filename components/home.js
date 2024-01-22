@@ -334,8 +334,8 @@ export default function Home() {
                         {cardRow()}
                     </View>
                     </View> */}
-                    {/* {<WikiGridList/>} */}
-                    <WeekTimeSHeetFunc items={dets}/>
+                    {<WikiGridList/>}
+                    {/* <WeekTimeSHeetFunc items={dets}/> */}
 
                 {/* <SafeAreaView style={styles.container1}>
                     <FlatList
